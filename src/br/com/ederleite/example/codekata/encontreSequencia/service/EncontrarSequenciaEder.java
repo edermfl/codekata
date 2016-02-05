@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by eml on 29/01/16.
  */
-public class EncontrarSequencia implements IEncontrarSequencia {
+public class EncontrarSequenciaEder implements IEncontrarSequencia {
 
     @Override
     public PosicaoTO encontrar(final String p, final String t) {

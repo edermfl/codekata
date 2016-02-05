@@ -52,7 +52,7 @@ public class EncontrarSequenciaTest {
     @Test
     public void testEncontrar() throws Exception {
 
-	final EncontrarSequencia service = new EncontrarSequencia();
+	final EncontrarSequenciaEder service = new EncontrarSequenciaEder();
 	final PosicaoTO posicaoTO = service.encontrar("AB", "ABXYYXBAAB");
 
 	final String posicoesDireta = StringUtils.join(posicaoTO.listaPosicoesDireta, "|");
@@ -65,7 +65,7 @@ public class EncontrarSequenciaTest {
 
     @Test
     public void testEncontrarTestTable() throws IOException {
-	final EncontrarSequencia service = new EncontrarSequencia();
+	final IEncontrarSequencia service = new EncontrarSequenciaDarian()			;
 	// leio o arquivo texto, e transformo-o em uma lista de strings
 	final File testTable = new File(
 			"test/" + this.getClass().getPackage().getName().replaceAll("\\.", "/") + "/testTable.txt");
