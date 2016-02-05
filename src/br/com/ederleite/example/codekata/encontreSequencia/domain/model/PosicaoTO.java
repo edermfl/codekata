@@ -18,11 +18,11 @@ public class PosicaoTO {
 	listaPosicoesReversa.add(pPosicao);
     }
 
-    List<Integer> getListaPosicoesDireta() {
+    public List<Integer> getListaPosicoesDireta() {
 	return listaPosicoesDireta;
     }
 
-    List<Integer> getListaPosicoesReversa() {
+    public List<Integer> getListaPosicoesReversa() {
 	return listaPosicoesReversa;
     }
 }

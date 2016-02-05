@@ -2,6 +2,9 @@ package br.com.ederleite.example.codekata.encontreSequencia.service;
 
 import br.com.ederleite.example.codekata.encontreSequencia.domain.model.PosicaoTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by eml on 29/01/16.
  */
@@ -15,33 +18,42 @@ public class EncontrarSequencia implements IEncontrarSequencia {
 	if (p.length() > tamanhoT) {
 	    throw new RuntimeException("p é maior que t.");
 	}
-
-	int anterior = 0;
-	final String[] partes = t.split(p);
-	for (String parte : partes) {
-	    int posicaoAtual = anterior + parte.length() + 1;
-	    if (tamanhoT >= posicaoAtual) {
-		posicao.addPosicaoDireta(posicaoAtual);
-		anterior += parte.length() + p.length();
-	    }
+	if (!verificaStringValida(p)) {
+	    throw new RuntimeException("p possui caracteres inválidos " + p + ", são válidos apenas os caracteres A, B, X, Y ");
+	}
+	if (!verificaStringValida(t)) {
+	    throw new RuntimeException("t possui caracteres inválidos " + t + ", são válidos apenas os caracteres A, B, X, Y ");
 	}
 
-	anterior = 0;
-	final String pInvertido = inverterString(p);
-	final String[] partesInvertido = t.split(pInvertido);
-	for (String parte : partesInvertido) {
-	    int posicaoAtual = anterior + parte.length() + 1;
-	    if (tamanhoT >= posicaoAtual) {
-		posicao.addPosicaoReversa(posicaoAtual);
-		anterior += parte.length() + p.length();
-	    }
-	}
+	posicao.getListaPosicoesDireta().addAll(procurarPosicoes(p, t));
+	posicao.getListaPosicoesReversa().addAll(procurarPosicoes(inverterString(p), t));
 
 	return posicao;
     }
 
     private String inverterString(String p) {
 	return new StringBuffer(p).reverse().toString();
+    }
+
+    private List<Integer> procurarPosicoes(final String p, final String t) {
+	List<Integer> listaPosicoes = new ArrayList<Integer>();
+	int anterior = 0;
+	if (p.equals(t)) {
+	    listaPosicoes.add(1);
+	}
+	final String[] partes = t.split(p);
+	for (String parte : partes) {
+	    int posicaoAtual = anterior + parte.length() + 1;
+	    if (t.length() >= posicaoAtual) {
+		listaPosicoes.add(posicaoAtual);
+		anterior += parte.length() + p.length();
+	    }
+	}
+	return listaPosicoes;
+    }
+
+    private boolean verificaStringValida(final String pString) {
+	return pString.matches("[ABXY]*");
     }
 
 }

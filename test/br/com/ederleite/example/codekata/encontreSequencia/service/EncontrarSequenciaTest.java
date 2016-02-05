@@ -27,10 +27,10 @@ public class EncontrarSequenciaTest {
     @Test
     public void test() {
 	List<String> caracteresValidos = Arrays.asList("A", "B", "X", "Y");
-	for (int cenario = 2; cenario < 50; cenario++) {
+	for (int cenario = 2; cenario < 3; cenario++) {
 
 	    Random gerador = new Random();
-	    final int tamanhoSequencia = gerador.nextInt(40) + 1;
+	    final int tamanhoSequencia = 5000;
 
 	    StringBuilder sequencia = new StringBuilder();
 	    for (int i = 0; i < tamanhoSequencia; i++) {
@@ -38,7 +38,7 @@ public class EncontrarSequenciaTest {
 		sequencia.append(caracteresValidos.get(numero));
 	    }
 
-	    final int tamanhoProcura = gerador.nextInt(tamanhoSequencia) + 1;
+	    final int tamanhoProcura = 10 + 1;
 	    StringBuilder procura = new StringBuilder();
 	    for (int i = 0; i < tamanhoProcura; i++) {
 		final int numero = gerador.nextInt(4);
@@ -76,6 +76,9 @@ public class EncontrarSequenciaTest {
 	// os erro serão adicionados nessa lista
 	final List<String> erros = new ArrayList<String>();
 	for (String linhaTxt : linhasTestTable) {
+	    if (linhaTxt.isEmpty() || linhaTxt.startsWith("!--")) {
+		continue;
+	    }
 	    final String[] linha = StringUtils.splitPreserveAllTokens(linhaTxt.substring(1, linhaTxt.length() - 1), '|');
 
 	    final String cenario = linha[0];
@@ -83,6 +86,7 @@ public class EncontrarSequenciaTest {
 	    final String sequencia = linha[2];
 	    final String direta = linha[3];
 	    final String reversa = linha[4];
+	    final String erro = linha[5];
 
 	    try {
 		final PosicaoTO posicaoTO = service.encontrar(procurado, sequencia);
@@ -90,17 +94,18 @@ public class EncontrarSequenciaTest {
 		final String posicoesDireta = StringUtils.join(posicaoTO.listaPosicoesDireta, ";");
 		if (!direta.equals(posicoesDireta)) {
 		    erros.add("Cenário " + cenario + ": Falha direta. Esperado (" + direta + "), mas retornado (" + posicoesDireta
-				    + ")\n");
+				    + ")");
 		}
 
 		final String posicoesReversa = StringUtils.join(posicaoTO.listaPosicoesReversa, ";");
-		if (!direta.equals(posicoesDireta)) {
-		    erros.add("Cenário \"+cenario+\": Falha reversa. Esperado (" + reversa + "), mas retornado ("
-				    + posicoesReversa
-				    + ")\n");
+		if (!reversa.equals(posicoesReversa)) {
+		    erros.add("Cenário " + cenario + ": Falha reversa. Esperado (" + reversa + "), mas retornado ("
+				    + posicoesReversa + ")");
 		}
-	    } catch (Exception e) {
-
+	    } catch (Throwable e) {
+		if (StringUtils.isEmpty(erro)) {
+		    erros.add("Cenário " + cenario + ": Era esperado lançar uma exceção!");
+		}
 	    }
 	}
 
