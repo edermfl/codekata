@@ -1,7 +1,9 @@
-package br.com.ederleite.example.codekata.encontreSequencia.service;
+package br.com.ederleite.example.codekata.encontreSequencia.service.impl;
 
 import br.com.ederleite.example.codekata.encontreSequencia.domain.model.PosicaoTO;
- /**
+import br.com.ederleite.example.codekata.encontreSequencia.service.IEncontrarSequencia;
+
+/**
  * @author darian.beluzzo
  * @version 1.0
  * @since 04/02/16

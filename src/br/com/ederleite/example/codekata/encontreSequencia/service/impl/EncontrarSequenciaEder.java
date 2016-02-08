@@ -1,6 +1,7 @@
-package br.com.ederleite.example.codekata.encontreSequencia.service;
+package br.com.ederleite.example.codekata.encontreSequencia.service.impl;
 
 import br.com.ederleite.example.codekata.encontreSequencia.domain.model.PosicaoTO;
+import br.com.ederleite.example.codekata.encontreSequencia.service.IEncontrarSequencia;
 
 import java.util.ArrayList;
 import java.util.List;

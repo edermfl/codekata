@@ -1,6 +1,7 @@
-package br.com.ederleite.example.codekata.encontreSequencia.service;
+package br.com.ederleite.example.codekata.encontreSequencia.service.impl;
 
 import br.com.ederleite.example.codekata.encontreSequencia.domain.model.PosicaoTO;
+import br.com.ederleite.example.codekata.encontreSequencia.service.IEncontrarSequencia;
 
 public class EncontrarSequenciaRafael extends PosicaoTO implements IEncontrarSequencia {
     public PosicaoTO encontrar(final String p, final String t) {

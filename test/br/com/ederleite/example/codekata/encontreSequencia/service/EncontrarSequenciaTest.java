@@ -1,6 +1,7 @@
 package br.com.ederleite.example.codekata.encontreSequencia.service;
 
 import br.com.ederleite.example.codekata.encontreSequencia.domain.model.PosicaoTO;
+import br.com.ederleite.example.codekata.encontreSequencia.service.impl.EncontrarSequenciaEder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
@@ -65,7 +66,7 @@ public class EncontrarSequenciaTest {
 
     @Test
     public void testEncontrarTestTable() throws IOException {
-	final IEncontrarSequencia service = new EncontrarSequenciaDarian()			;
+	final IEncontrarSequencia service = new EncontrarSequenciaEder();
 	// leio o arquivo texto, e transformo-o em uma lista de strings
 	final File testTable = new File(
 			"test/" + this.getClass().getPackage().getName().replaceAll("\\.", "/") + "/testTable.txt");
