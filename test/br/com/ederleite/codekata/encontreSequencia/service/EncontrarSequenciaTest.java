@@ -1,7 +1,7 @@
-package br.com.ederleite.example.codekata.encontreSequencia.service;
+package br.com.ederleite.codekata.encontreSequencia.service;
 
-import br.com.ederleite.example.codekata.encontreSequencia.domain.model.PosicaoTO;
-import br.com.ederleite.example.codekata.encontreSequencia.service.impl.EncontrarSequenciaEder;
+import br.com.ederleite.codekata.encontreSequencia.domain.model.PosicaoTO;
+import br.com.ederleite.codekata.encontreSequencia.service.impl.EncontrarSequenciaEder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;

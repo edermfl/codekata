@@ -1,4 +1,4 @@
-package br.com.ederleite.example.codekata.encontreSequencia.domain.model;
+package br.com.ederleite.codekata.encontreSequencia.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
