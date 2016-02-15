@@ -42,4 +42,8 @@ public class QuantidadeNotaTO {
     public Integer getNotas50() {
 	return notas50;
     }
+
+    @Override public String toString() {
+	return notas50 + ";" + notas20 + ";" + notas10 + ";" + notas5 + ";" + notas2;
+    }
 }
