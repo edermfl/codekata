@@ -1,5 +1,7 @@
 package br.com.ederleite.codekata.caixaEletronico.domain.model;
 
+import java.math.BigDecimal;
+
 /**
  * Created by eder on 12/02/2016.
  */
@@ -41,6 +43,10 @@ public class QuantidadeNotaTO {
 
     public Integer getNotas50() {
 	return notas50;
+    }
+
+    public BigDecimal getValorTotal() {
+	return new BigDecimal(notas50 * 50 + notas20 * 20 + notas10 * 10 + notas5 * 5 + notas2 * 2);
     }
 
     @Override public String toString() {

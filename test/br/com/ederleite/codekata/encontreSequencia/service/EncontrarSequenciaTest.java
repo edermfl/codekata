@@ -2,13 +2,11 @@ package br.com.ederleite.codekata.encontreSequencia.service;
 
 import br.com.ederleite.codekata.encontreSequencia.domain.model.PosicaoTO;
 import br.com.ederleite.codekata.encontreSequencia.service.impl.EncontrarSequenciaEder;
-import org.apache.commons.io.IOUtils;
+import br.com.ederleite.codekata.util.ConstantsCodekata;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,10 +18,6 @@ import java.util.Random;
  */
 public class EncontrarSequenciaTest {
 
-    /**
-     * ISO8859 = "ISO-8859-1"
-     */
-    public static final String ISO88591 = "ISO-8859-1";
 
     @Test
     public void test() {
@@ -68,18 +62,10 @@ public class EncontrarSequenciaTest {
     public void testEncontrarTestTable() throws IOException {
 	final IEncontrarSequencia service = new EncontrarSequenciaEder();
 	// leio o arquivo texto, e transformo-o em uma lista de strings
-	final File testTable = new File(
-			"test/" + this.getClass().getPackage().getName().replaceAll("\\.", "/") + "/testTable.txt");
-	System.out.println(testTable.getAbsolutePath());
-	final FileInputStream inputStream = new FileInputStream(testTable);
-	final List<String> linhasTestTable = IOUtils.readLines(inputStream, ISO88591);
-	linhasTestTable.remove(0);
+	final List<String> linhasTestTable = ConstantsCodekata.obterCenariosTestTable(this.getClass())    ;
 	// os erro serão adicionados nessa lista
 	final List<String> erros = new ArrayList<String>();
 	for (String linhaTxt : linhasTestTable) {
-	    if (linhaTxt.isEmpty() || linhaTxt.startsWith("!--")) {
-		continue;
-	    }
 	    final String[] linha = StringUtils.splitPreserveAllTokens(linhaTxt.substring(1, linhaTxt.length() - 1), '|');
 
 	    final String cenario = linha[0];
