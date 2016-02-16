@@ -21,6 +21,6 @@ public interface ICaixaEletronicoService {
      * Método retornará um objeto do tipo QuantidadeNotaTO com a quantidade de notas necessárias para compor o valor informado por parametro.
      * @param pValor
      * @throws ImpossivelSacarException
-     ** /
+     **/
     public QuantidadeNotaTO sacar(BigDecimal pValor) throws ImpossivelSacarException;
 }
