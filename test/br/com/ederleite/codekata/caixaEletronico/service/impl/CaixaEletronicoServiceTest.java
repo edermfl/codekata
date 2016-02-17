@@ -59,7 +59,7 @@ public class CaixaEletronicoServiceTest {
 	    } catch (Throwable e) {
 		if (!erroEsperado) {
 		    erros.add("Cenario " + cenario + " falhou: pois NAO era esperado erro neste cenario (Dados no cenario: "
-				    + linhaTxt + ")");
+				    + linhaTxt + "). Erro lancado: " + e.getMessage());
 		}
 	    }
 	}
