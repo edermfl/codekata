@@ -43,32 +43,48 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	BigDecimal valor = pValor.setScale(0, RoundingMode.DOWN);
 
 	//se valor for impar, já infiro que a quantidade de notas de 5 é 1, se não, dá erro.
-	boolean ehImpar = valor.remainder(new BigDecimal(2)).compareTo(BigDecimal.ONE) == 0;
+	boolean ehImpar = !valorEhMultiploDe(valor, new BigDecimal(2));
 	Integer quantCinco = 0;
 	if (ehImpar && obterQuantidadeNotaEstoque(CINCO) > 0) {
 	    quantCinco = 1;
 	    valor = valor.subtract(CINCO);
 	}
 
+	//trata entrega de notas de R$ 50, tem uma pegadinha aqui!
 	Integer quantCinquenta = calcularQuantidadeNotas(valor, CINQUENTA);
 	valor = calcularSobra(valor, quantCinquenta, CINQUENTA);
+	final boolean valorEhMultiploDeVinte = valor.compareTo(BigDecimal.ZERO) != 0 && !valorEhMultiploDe(valor, VINTE);
+	final boolean tenhoEstoqueDeNotasMenoresQVinte = obterQuantidadeNotaEstoque(DEZ) == 0 &&
+			obterQuantidadeNotaEstoque(CINCO) - quantCinco == 0 && obterQuantidadeNotaEstoque(DOIS) == 0;
+	if (valorEhMultiploDeVinte && tenhoEstoqueDeNotasMenoresQVinte) {
+	    quantCinquenta -= 1;
+	    valor = valor.add(CINQUENTA);
+	}
+
+	//trata entrega de notas de R$ 20
 	Integer quantVinte = calcularQuantidadeNotas(valor, VINTE);
 	valor = calcularSobra(valor, quantVinte, VINTE);
+
+	//trata entrega de notas de R$ 10
 	Integer quantDez = calcularQuantidadeNotas(valor, DEZ);
 	valor = calcularSobra(valor, quantDez, DEZ);
 
+	//trata entrega de notas de R$ 5, tem uma pegadinha aqui também
 	if (quantCinco == 0) {
 	    quantCinco = calcularQuantidadeNotas(valor, CINCO);
 	    // a quantidade de nota 5 não deve ser impar, caso contrário não conseguirei dispensar o valor desejado.
 	    final boolean quantCincoEhImpar = quantCinco % 2 == 1;
-	    if(quantCincoEhImpar){
+	    if (quantCincoEhImpar) {
 		quantCinco -= 1;
 	    }
 	    valor = calcularSobra(valor, quantCinco, CINCO);
 	}
 
+	//trata entrega de notas de R$ 2
 	Integer quantDois = calcularQuantidadeNotas(valor, DOIS);
 	valor = calcularSobra(valor, quantDois, DOIS);
+
+	//Dá erro caso valo não esteja zerado.
 	if (valor.compareTo(BigDecimal.ZERO) != 0) {
 	    throw new ImpossivelSacarException("Impossivel sacar, estoque de notas insuficiente.");
 	}
@@ -90,6 +106,10 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	if (Arrays.asList("1", "3").contains(Integer.valueOf(valorInteiroEDecimal[0]))) {
 	    throw new ImpossivelSacarException("Impossivel sacar, caixa não possui notas de R$ 1.");
 	}
+    }
+
+    public boolean valorEhMultiploDe(final BigDecimal pValor, final BigDecimal pMultiploDe) {
+	return pValor.remainder(pMultiploDe).compareTo(BigDecimal.ZERO) == 0;
     }
 
     private Integer calcularQuantidadeNotas(final BigDecimal pValor, final BigDecimal pValorNota) {
@@ -124,6 +144,5 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	}
 	return estoque.getNotas2();
     }
-
 
 }
