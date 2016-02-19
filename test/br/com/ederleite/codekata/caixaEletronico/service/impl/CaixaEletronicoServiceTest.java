@@ -32,6 +32,7 @@ public class CaixaEletronicoServiceTest {
 	    final String[] estoque = StringUtils.splitPreserveAllTokens(linha[1], ';');
 	    final String valor = linha[2];
 	    final String resultadoEsperado = linha[3];
+	    final Integer quantNotasEsperadas = new Integer(0 + linha[4]);
 
 	    service.contarNotas(new QuantidadeNotaTO(new Integer(estoque[4]), new Integer(estoque[3]), new Integer(estoque[2]),
 			    new Integer(estoque[1]), new Integer(estoque[0])));
@@ -44,6 +45,13 @@ public class CaixaEletronicoServiceTest {
 
 		if (erroEsperado) {
 		    erros.add("Cenario " + cenario + " falhou: pois um erro era esperado (Dados no cenario: " + linhaTxt + ")");
+		    continue;
+		}
+
+		if (!quantNotasEsperadas.equals(notas.getQuantidadeNotas())) {
+		    erros.add("Cenario " + cenario + " falhou: quantidade de notas esperado (" + quantNotasEsperadas
+				    + "), não corresponde a quantidade retornada (" + notas.getQuantidadeNotas()
+				    + "). As notas dispensadas foram: "+notas.toString()+". (Dados no cenario: " + linhaTxt + ")");
 		    continue;
 		}
 

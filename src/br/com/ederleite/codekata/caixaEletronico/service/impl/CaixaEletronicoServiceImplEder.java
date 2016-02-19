@@ -45,18 +45,20 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	//se valor for impar, já infiro que a quantidade de notas de 5 é 1, se não, dá erro.
 	boolean ehImpar = !valorEhMultiploDe(valor, new BigDecimal(2));
 	Integer quantCinco = 0;
-	if (ehImpar && obterQuantidadeNotaEstoque(CINCO) > 0) {
+	Integer estoqueNotas5 = obterQuantidadeNotaEstoque(CINCO);
+	if (ehImpar && estoqueNotas5 > 0) {
 	    quantCinco = 1;
 	    valor = valor.subtract(CINCO);
+	    estoqueNotas5 -= quantCinco;
 	}
 
 	//trata entrega de notas de R$ 50, tem uma pegadinha aqui!
 	Integer quantCinquenta = calcularQuantidadeNotas(valor, CINQUENTA);
 	valor = calcularSobra(valor, quantCinquenta, CINQUENTA);
-	final boolean valorEhMultiploDeVinte = valor.compareTo(BigDecimal.ZERO) != 0 && !valorEhMultiploDe(valor, VINTE);
+	final boolean valorNaoEhMultiploDeVinte = valor.compareTo(BigDecimal.ZERO) != 0 && !valorEhMultiploDe(valor, VINTE);
 	final boolean tenhoEstoqueDeNotasMenoresQVinte = obterQuantidadeNotaEstoque(DEZ) == 0 &&
-			obterQuantidadeNotaEstoque(CINCO) - quantCinco == 0 && obterQuantidadeNotaEstoque(DOIS) == 0;
-	if (valorEhMultiploDeVinte && tenhoEstoqueDeNotasMenoresQVinte) {
+			estoqueNotas5 == 0 && obterQuantidadeNotaEstoque(DOIS) == 0;
+	if (valorNaoEhMultiploDeVinte && tenhoEstoqueDeNotasMenoresQVinte) {
 	    quantCinquenta -= 1;
 	    valor = valor.add(CINQUENTA);
 	}
@@ -70,14 +72,15 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	valor = calcularSobra(valor, quantDez, DEZ);
 
 	//trata entrega de notas de R$ 5, tem uma pegadinha aqui também
-	if (quantCinco == 0) {
-	    quantCinco = calcularQuantidadeNotas(valor, CINCO);
+	if (quantCinco == 0 || valorEhMultiploDe(valor, CINCO)) {
+	    Integer quantNotas5TotalValorPar = calcularQuantidadeNotas(valor, CINCO);
 	    // a quantidade de nota 5 não deve ser impar, caso contrário não conseguirei dispensar o valor desejado.
-	    final boolean quantCincoEhImpar = quantCinco % 2 == 1;
+	    final boolean quantCincoEhImpar = quantNotas5TotalValorPar % 2 == 1;
 	    if (quantCincoEhImpar) {
-		quantCinco -= 1;
+		quantNotas5TotalValorPar -= 1;
 	    }
-	    valor = calcularSobra(valor, quantCinco, CINCO);
+	    valor = calcularSobra(valor, quantNotas5TotalValorPar, CINCO);
+	    quantCinco += quantNotas5TotalValorPar;
 	}
 
 	//trata entrega de notas de R$ 2

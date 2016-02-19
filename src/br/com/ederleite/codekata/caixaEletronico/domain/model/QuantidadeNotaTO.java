@@ -45,14 +45,32 @@ public class QuantidadeNotaTO {
 	return notas50;
     }
 
-    public void setNotas2(final Integer pNotas2) {notas2 = pNotas2;}
-    public void setNotas5(final Integer pNotas5) {notas5 = pNotas5;}
-    public void setNotas10(final Integer pNotas10) {notas10 = pNotas10;}
-    public void setNotas20(final Integer pNotas20) {notas20 = pNotas20;}
-    public void setNotas50(final Integer pNotas50) {notas50 = pNotas50;}
+    public Integer getQuantidadeNotas() {
+	return notas50 + notas20 + notas10 + notas5 + notas2;
+    }
 
     public BigDecimal getValorTotal() {
 	return new BigDecimal(notas50 * 50 + notas20 * 20 + notas10 * 10 + notas5 * 5 + notas2 * 2);
+    }
+
+    public void setNotas10(final Integer pNotas10) {
+	notas10 = pNotas10;
+    }
+
+    public void setNotas2(final Integer pNotas2) {
+	notas2 = pNotas2;
+    }
+
+    public void setNotas20(final Integer pNotas20) {
+	notas20 = pNotas20;
+    }
+
+    public void setNotas5(final Integer pNotas5) {
+	notas5 = pNotas5;
+    }
+
+    public void setNotas50(final Integer pNotas50) {
+	notas50 = pNotas50;
     }
 
     @Override public String toString() {
