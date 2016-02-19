@@ -42,4 +42,9 @@ public class QuantidadeNotaTO {
     public Integer getNotas50() {
 	return notas50;
     }
+    public void setNotas2(final Integer pNotas2) {notas2 = pNotas2;}
+    public void setNotas5(final Integer pNotas5) {notas5 = pNotas5;}
+    public void setNotas10(final Integer pNotas10) {notas10 = pNotas10;}
+    public void setNotas20(final Integer pNotas20) {notas20 = pNotas20;}
+    public void setNotas50(final Integer pNotas50) {notas50 = pNotas50;}
 }
