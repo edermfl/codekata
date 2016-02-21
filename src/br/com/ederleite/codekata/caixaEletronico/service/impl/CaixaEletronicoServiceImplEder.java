@@ -39,61 +39,29 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
     }
 
     @Override public QuantidadeNotaTO sacar(final BigDecimal pValor) throws ImpossivelSacarException {
+	final QuantidadeNotaTO retorno = new QuantidadeNotaTO(0, 0, 0, 0, 0);
+
 	validarValorInformado(pValor);
 	BigDecimal valor = pValor.setScale(0, RoundingMode.DOWN);
 
 	//se valor for impar, já infiro que a quantidade de notas de 5 é 1, se não, dá erro.
-	boolean ehImpar = !valorEhMultiploDe(valor, new BigDecimal(2));
-	Integer quantCinco = 0;
-	Integer estoqueNotas5 = obterQuantidadeNotaEstoque(CINCO);
-	if (ehImpar && estoqueNotas5 > 0) {
-	    quantCinco = 1;
-	    valor = valor.subtract(CINCO);
-	    estoqueNotas5 -= quantCinco;
-	}
-
+	valor = calcularValorImpar(valor, retorno);
 	//trata entrega de notas de R$ 50, tem uma pegadinha aqui!
-	Integer quantCinquenta = calcularQuantidadeNotas50(valor, CINQUENTA, estoqueNotas5);
-	valor = calcularSobra(valor, quantCinquenta, CINQUENTA);
-	//	final boolean valorNaoEhMultiploDeVinte = valor.compareTo(BigDecimal.ZERO) != 0 && !valorEhMultiploDe(valor, VINTE);
-	//	final boolean tenhoEstoqueDeNotasMenoresQVinte = obterQuantidadeNotaEstoque(DEZ) == 0 &&
-	//				estoqueNotas5 == 0 && obterQuantidadeNotaEstoque(DOIS) == 0;
-	//	final boolean valorNaoEhMultiploDeVinte = valor.compareTo(BigDecimal.ZERO) != 0 && !valorEhMultiploDe(valor, VINTE);
-	//
-	//	if (valorNaoEhMultiploDeVinte && tenhoEstoqueDeNotasMenoresQVinte) {
-	//	    quantCinquenta -= 1;
-	//	    valor = valor.add(CINQUENTA);
-	//	}
-
+	valor = calcularQuantidadeNotas50(valor, retorno);
 	//trata entrega de notas de R$ 20
-	Integer quantVinte = calcularQuantidadeNotas(valor, VINTE);
-	valor = calcularSobra(valor, quantVinte, VINTE);
-
+	valor = calcularQuantidadeNotas20(valor, retorno);
 	//trata entrega de notas de R$ 10
-	Integer quantDez = calcularQuantidadeNotas(valor, DEZ);
-	valor = calcularSobra(valor, quantDez, DEZ);
-
+	valor = calcularQuantidadeNotas10(valor, retorno);
 	//trata entrega de notas de R$ 5, tem uma pegadinha aqui também
-	if (quantCinco == 0 || valorEhMultiploDe(valor, CINCO)) {
-	    Integer quantNotas5TotalValorPar = calcularQuantidadeNotas(valor, CINCO);
-	    // a quantidade de nota 5 não deve ser impar, caso contrário não conseguirei dispensar o valor desejado.
-	    final boolean quantCincoEhImpar = quantNotas5TotalValorPar % 2 == 1;
-	    if (quantCincoEhImpar) {
-		quantNotas5TotalValorPar -= 1;
-	    }
-	    valor = calcularSobra(valor, quantNotas5TotalValorPar, CINCO);
-	    quantCinco += quantNotas5TotalValorPar;
-	}
-
+	valor = calcularQuantidadeNotas5(valor, retorno);
 	//trata entrega de notas de R$ 2
-	Integer quantDois = calcularQuantidadeNotas(valor, DOIS);
-	valor = calcularSobra(valor, quantDois, DOIS);
+	valor = calcularQuantidadeNotas2(valor, retorno);
 
 	//Dá erro caso valo não esteja zerado.
 	if (valor.compareTo(BigDecimal.ZERO) != 0) {
 	    throw new ImpossivelSacarException("Impossivel sacar, estoque de notas insuficiente.");
 	}
-	return new QuantidadeNotaTO(quantDois, quantCinco, quantDez, quantVinte, quantCinquenta);
+	return retorno;
     }
 
     public void validarValorInformado(final BigDecimal pValor) throws ImpossivelSacarException {
@@ -124,23 +92,75 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	return 0;
     }
 
-    private Integer calcularQuantidadeNotas50(final BigDecimal pValor, final BigDecimal pCINQUENTA,
-		    final Integer pEstoqueNotas5) {
+    private BigDecimal calcularQuantidadeNotas10(final BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+	Integer quantDez = calcularQuantidadeNotas(pValor, DEZ);
+	pRetorno.setNotas10(quantDez);
+	estoque.setNotas10(estoque.getNotas10() - quantDez);
+	return calcularSobra(pValor, quantDez, DEZ);
+    }
 
-	final Integer quantNotas50 = calcularQuantidadeNotas(pValor, pCINQUENTA);
-	final boolean naoTemNota10 = obterQuantidadeNotaEstoque(DEZ) == 0;
-	final boolean naoTem2Notas5 = pEstoqueNotas5 < 2;
-	final boolean tenhoNotas20Disponiveis =
-			obterQuantidadeNotaEstoque(VINTE) >= calcularQuantidadeNotas(pValor.add(CINQUENTA), VINTE);
-	if (quantNotas50 % 2 == 1 && naoTemNota10 && naoTem2Notas5 && tenhoNotas20Disponiveis) {
-	    return quantNotas50 - 1;
+    private BigDecimal calcularQuantidadeNotas2(final BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+	Integer quantDois = calcularQuantidadeNotas(pValor, DOIS);
+	pRetorno.setNotas2(quantDois);
+	estoque.setNotas2(estoque.getNotas2() - quantDois);
+	return calcularSobra(pValor, quantDois, DOIS);
+    }
+
+    private BigDecimal calcularQuantidadeNotas20(final BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+	Integer quantVinte = calcularQuantidadeNotas(pValor, VINTE);
+	pRetorno.setNotas20(quantVinte);
+	estoque.setNotas20(estoque.getNotas20() - quantVinte);
+	return calcularSobra(pValor, quantVinte, VINTE);
+    }
+
+    private BigDecimal calcularQuantidadeNotas5(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+	Integer quantNotas5 = 0;
+	if (estoque.getNotas5() == 0 || valorEhMultiploDe(pValor, CINCO)) {
+	    quantNotas5 = calcularQuantidadeNotas(pValor, CINCO);
+	    // a quantidade de nota 5 não deve ser impar, caso contrário não conseguirei dispensar o valor desejado.
+	    final boolean ehImparQuantCinco = quantNotas5 % 2 == 1;
+	    if (ehImparQuantCinco) {
+		quantNotas5 -= 1;
+	    }
+	    pValor = calcularSobra(pValor, quantNotas5, CINCO);
+	    estoque.setNotas5(estoque.getNotas5() + quantNotas5);
 	}
+	pRetorno.setNotas5(pRetorno.getNotas5() + quantNotas5);
+	return pValor;
+    }
 
-	return quantNotas50;
+    private BigDecimal calcularQuantidadeNotas50(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+	Integer quantNotas50 = calcularQuantidadeNotas(pValor, CINQUENTA);
+	BigDecimal valor = calcularSobra(pValor, quantNotas50, CINQUENTA);
+	if (!valorEhMultiploDe(valor, VINTE)) {
+	    final boolean naoTemNota10 = obterQuantidadeNotaEstoque(DEZ) == 0;
+	    final boolean naoTem2Notas5 = estoque.getNotas5() < 2;
+	    final boolean tenhoNotas20Disponiveis =
+			    obterQuantidadeNotaEstoque(VINTE) >= calcularQuantidadeNotas(valor.add(CINQUENTA), VINTE);
+	    if (quantNotas50 % 2 == 1 && naoTemNota10 && naoTem2Notas5 && tenhoNotas20Disponiveis) {
+		quantNotas50 -= 1;
+	    }
+	    valor = calcularSobra(pValor, quantNotas50, CINQUENTA);
+	}
+	estoque.setNotas50(estoque.getNotas50() - quantNotas50);
+	pRetorno.setNotas50(quantNotas50);
+	return valor;
     }
 
     private BigDecimal calcularSobra(final BigDecimal pValor, final Integer pQuant, final BigDecimal pValorNota) {
 	return pValor.subtract(pValorNota.multiply(new BigDecimal(pQuant)));
+    }
+
+    private BigDecimal calcularValorImpar(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+	boolean ehImpar = !valorEhMultiploDe(pValor, new BigDecimal(2));
+	Integer quantCinco = 0;
+	if (ehImpar && estoque.getNotas5() > 0) {
+	    quantCinco = 1;
+	    pValor = pValor.subtract(CINCO);
+	    estoque.setNotas5(estoque.getNotas5() - quantCinco);
+	}
+	pRetorno.setNotas5(quantCinco);
+	return pValor;
     }
 
     private Integer descobrirQuantidadeDeNotas(final BigDecimal pValor, final BigDecimal pValorNota) {
