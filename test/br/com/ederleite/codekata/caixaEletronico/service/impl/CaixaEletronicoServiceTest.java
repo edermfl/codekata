@@ -64,6 +64,7 @@ public class CaixaEletronicoServiceTest {
 		    erros.add("Cenario " + cenario + " falhou: Esperado (" + resultadoEsperado + "), mas retornado (" + notas
 				    .toString() + ")");
 		}
+		    System.out.println("Cenário " + cenario + ": ok!");
 	    } catch (Throwable e) {
 		if (!erroEsperado) {
 		    erros.add("Cenario " + cenario + " falhou: pois NAO era esperado erro neste cenario (Dados no cenario: "
@@ -113,23 +114,7 @@ public class CaixaEletronicoServiceTest {
 	caixaEletronico.sacar(new BigDecimal("50.15"));
     }
 
-    @Test(expected = ImpossivelSacarException.class)
-    public void testSacarValorInvalido_ValorNaoSuportado() throws Exception {
 
-	final CaixaEletronicoServiceImplEder caixaEletronico = new CaixaEletronicoServiceImplEder();
-	caixaEletronico.contarNotas(new QuantidadeNotaTO(10, 10, 10, 10, 10));
-
-	caixaEletronico.sacar(new BigDecimal("51"));
-    }
-
-    @Test(expected = ImpossivelSacarException.class)
-    public void testSacarValorInvalido_ValorNaoSuportado2() throws Exception {
-
-	final CaixaEletronicoServiceImplEder caixaEletronico = new CaixaEletronicoServiceImplEder();
-	caixaEletronico.contarNotas(new QuantidadeNotaTO(10, 10, 10, 10, 10));
-
-	caixaEletronico.sacar(new BigDecimal("53"));
-    }
 
     @Test(expected = ImpossivelSacarException.class)
     public void testSacarValorInvalido_ValorNaoSuportado3() throws Exception {

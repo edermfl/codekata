@@ -53,15 +53,17 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	}
 
 	//trata entrega de notas de R$ 50, tem uma pegadinha aqui!
-	Integer quantCinquenta = calcularQuantidadeNotas(valor, CINQUENTA);
+	Integer quantCinquenta = calcularQuantidadeNotas50(valor, CINQUENTA, estoqueNotas5);
 	valor = calcularSobra(valor, quantCinquenta, CINQUENTA);
-	final boolean valorNaoEhMultiploDeVinte = valor.compareTo(BigDecimal.ZERO) != 0 && !valorEhMultiploDe(valor, VINTE);
-	final boolean tenhoEstoqueDeNotasMenoresQVinte = obterQuantidadeNotaEstoque(DEZ) == 0 &&
-			estoqueNotas5 == 0 && obterQuantidadeNotaEstoque(DOIS) == 0;
-	if (valorNaoEhMultiploDeVinte && tenhoEstoqueDeNotasMenoresQVinte) {
-	    quantCinquenta -= 1;
-	    valor = valor.add(CINQUENTA);
-	}
+	//	final boolean valorNaoEhMultiploDeVinte = valor.compareTo(BigDecimal.ZERO) != 0 && !valorEhMultiploDe(valor, VINTE);
+	//	final boolean tenhoEstoqueDeNotasMenoresQVinte = obterQuantidadeNotaEstoque(DEZ) == 0 &&
+	//				estoqueNotas5 == 0 && obterQuantidadeNotaEstoque(DOIS) == 0;
+	//	final boolean valorNaoEhMultiploDeVinte = valor.compareTo(BigDecimal.ZERO) != 0 && !valorEhMultiploDe(valor, VINTE);
+	//
+	//	if (valorNaoEhMultiploDeVinte && tenhoEstoqueDeNotasMenoresQVinte) {
+	//	    quantCinquenta -= 1;
+	//	    valor = valor.add(CINQUENTA);
+	//	}
 
 	//trata entrega de notas de R$ 20
 	Integer quantVinte = calcularQuantidadeNotas(valor, VINTE);
@@ -120,6 +122,21 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	    return descobrirQuantidadeDeNotas(pValor, pValorNota);
 	}
 	return 0;
+    }
+
+    private Integer calcularQuantidadeNotas50(final BigDecimal pValor, final BigDecimal pCINQUENTA,
+		    final Integer pEstoqueNotas5) {
+
+	final Integer quantNotas50 = calcularQuantidadeNotas(pValor, pCINQUENTA);
+	final boolean naoTemNota10 = obterQuantidadeNotaEstoque(DEZ) == 0;
+	final boolean naoTem2Notas5 = pEstoqueNotas5 < 2;
+	final boolean tenhoNotas20Disponiveis =
+			obterQuantidadeNotaEstoque(VINTE) >= calcularQuantidadeNotas(pValor.add(CINQUENTA), VINTE);
+	if (quantNotas50 % 2 == 1 && naoTemNota10 && naoTem2Notas5 && tenhoNotas20Disponiveis) {
+	    return quantNotas50 - 1;
+	}
+
+	return quantNotas50;
     }
 
     private BigDecimal calcularSobra(final BigDecimal pValor, final Integer pQuant, final BigDecimal pValorNota) {

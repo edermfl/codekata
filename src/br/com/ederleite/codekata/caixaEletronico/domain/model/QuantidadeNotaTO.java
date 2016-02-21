@@ -25,6 +25,9 @@ public class QuantidadeNotaTO {
 	notas50 = pQuantidadeNotas50;
     }
 
+    public QuantidadeNotaTO() {
+    }
+
     public Integer getNotas10() {
 	return notas10;
     }
