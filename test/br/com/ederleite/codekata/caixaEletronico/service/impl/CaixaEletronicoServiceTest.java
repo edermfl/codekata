@@ -20,7 +20,7 @@ public class CaixaEletronicoServiceTest {
 
     @Test
     public void testEncontrarTestTable() throws IOException {
-	final ICaixaEletronicoService service = new CaixaEletronicoServiceImplEder();
+	final ICaixaEletronicoService service = new CaixaEletronicoServiceImplFernando();
 	// leio o arquivo texto, e transformo-o em uma lista de strings
 	final List<String> linhasTestTable = ConstantsCodekata.obterCenariosTestTable(this.getClass());
 	// os erro serão adicionados nessa lista

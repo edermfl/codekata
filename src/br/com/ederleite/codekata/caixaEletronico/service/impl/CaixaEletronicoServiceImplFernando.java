@@ -11,31 +11,40 @@ import java.util.Map;
 /**
  * Created by fcs on 20/02/16.
  */
-public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
+public class CaixaEletronicoServiceImplFernando implements ICaixaEletronicoService {
 
-    private Map<Integer,Integer> qtdNotas = new HashMap<Integer,Integer>();
+    private Map<Integer, Integer> qtdNotasInicial = new HashMap<Integer, Integer>();
+
+    private Map<Integer, Integer> qtdNotasRetorno = new HashMap<Integer, Integer>();
 
     @Override public void contarNotas(final QuantidadeNotaTO pQuantidadeNotas) {
-	qtdNotas.put(50, pQuantidadeNotas.getNotas50());
-	qtdNotas.put(20, pQuantidadeNotas.getNotas20());
-	qtdNotas.put(10, pQuantidadeNotas.getNotas10());
-	qtdNotas.put(5, pQuantidadeNotas.getNotas5());
-	qtdNotas.put(2, pQuantidadeNotas.getNotas2());
+	qtdNotasInicial.put(50, pQuantidadeNotas.getNotas50());
+	qtdNotasInicial.put(20, pQuantidadeNotas.getNotas20());
+	qtdNotasInicial.put(10, pQuantidadeNotas.getNotas10());
+	qtdNotasInicial.put(5, pQuantidadeNotas.getNotas5());
+	qtdNotasInicial.put(2, pQuantidadeNotas.getNotas2());
+	qtdNotasRetorno.put(50, 0);
+	qtdNotasRetorno.put(20, 0);
+	qtdNotasRetorno.put(10, 0);
+	qtdNotasRetorno.put(5, 0);
+	qtdNotasRetorno.put(2, 0);
+
     }
 
     @Override public QuantidadeNotaTO sacar(BigDecimal pValor) throws ImpossivelSacarException {
 	QuantidadeNotaTO retorno = new QuantidadeNotaTO();
 
 	verificaRestricoes(pValor);
-	pValor = usaNotasDe50(pValor, retorno);
-	pValor = usaNotasDe20(pValor, retorno);
-	pValor = usaNotasDe10(pValor, retorno);
-	pValor = usaNotasDe5(pValor, retorno);
-	pValor = usaNotasDe2(pValor, retorno);
+	pValor = usaNotasDe50(pValor);
+	pValor = usaNotasDe20(pValor);
+	pValor = usaNotasDe10(pValor);
+	pValor = usaNotasDe5(pValor);
+	pValor = usaNotasDe2(pValor);
 
 	if (pValor.compareTo(BigDecimal.ZERO) != 0) {
 	    throw new ImpossivelSacarException("Impossivel sacar!! Valor restante: " + pValor);
 	}
+	setaValoresNoTODeRetorno(qtdNotasRetorno, retorno);
 	return retorno;
     }
 
@@ -44,14 +53,23 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
     }
 
     private void devolveNotaDe(final int pNota) {
-	qtdNotas.put(pNota, qtdNotas.get(pNota) + 1);
+	qtdNotasInicial.put(pNota, qtdNotasInicial.get(pNota) + 1);
     }
 
     private BigDecimal incrementaValorEm(final int pValorNota, final BigDecimal pValor) {
 	return pValor.add(new BigDecimal(pValorNota));
     }
 
-    private BigDecimal usaNotasDe10(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+    private void setaValoresNoTODeRetorno(final Map<Integer, Integer> pQtdNotasRetorno,
+		    final QuantidadeNotaTO pRetorno) {
+	pRetorno.setNotas2(pQtdNotasRetorno.get(2));
+	pRetorno.setNotas5(pQtdNotasRetorno.get(5));
+	pRetorno.setNotas10(pQtdNotasRetorno.get(10));
+	pRetorno.setNotas20(pQtdNotasRetorno.get(20));
+	pRetorno.setNotas50(pQtdNotasRetorno.get(50));
+    }
+
+    private BigDecimal usaNotasDe10(BigDecimal pValor) {
 	while (pValor.compareTo(new BigDecimal(10)) != -1) {
 	    if (usouNotaDe(10)) {
 		pValor = decrementaValorEm(10, pValor);
@@ -62,7 +80,7 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
 		    pValor = incrementaValorEm(10, pValor);
 		    break;
 		}
-//		pRetorno.adicionaNotaDe10();
+		qtdNotasRetorno.put(10, qtdNotasRetorno.get(10) + 1);
 	    } else {
 		break;
 	    }
@@ -70,11 +88,11 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
 	return pValor;
     }
 
-    private BigDecimal usaNotasDe2(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+    private BigDecimal usaNotasDe2(BigDecimal pValor) {
 	while (pValor.compareTo(new BigDecimal(2)) != -1) {
 	    if (usouNotaDe(2)) {
 		pValor = decrementaValorEm(2, pValor);
-//		pRetorno.adicionaNotaDe2();
+		qtdNotasRetorno.put(2, qtdNotasRetorno.get(2) + 1);
 	    } else {
 		break;
 	    }
@@ -82,7 +100,7 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
 	return pValor;
     }
 
-    private BigDecimal usaNotasDe20(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+    private BigDecimal usaNotasDe20(BigDecimal pValor) {
 	while (pValor.compareTo(new BigDecimal(20)) != -1) {
 	    if (usouNotaDe(20)) {
 		pValor = decrementaValorEm(20, pValor);
@@ -93,7 +111,7 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
 		    pValor = incrementaValorEm(20, pValor);
 		    break;
 		}
-//		pRetorno.adicionaNotaDe20();
+		qtdNotasRetorno.put(20, qtdNotasRetorno.get(20) + 1);
 	    } else {
 		break;
 	    }
@@ -101,7 +119,7 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
 	return pValor;
     }
 
-    private BigDecimal usaNotasDe5(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+    private BigDecimal usaNotasDe5(BigDecimal pValor) {
 	while (pValor.compareTo(new BigDecimal(5)) != -1) {
 	    if (usouNotaDe(5)) {
 		pValor = decrementaValorEm(5, pValor);
@@ -110,7 +128,7 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
 		    pValor = incrementaValorEm(5, pValor);
 		    break;
 		}
-//		pRetorno.adicionaNotaDe5();
+		qtdNotasRetorno.put(5, qtdNotasRetorno.get(5) + 1);
 	    } else {
 		break;
 	    }
@@ -118,7 +136,7 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
 	return pValor;
     }
 
-    private BigDecimal usaNotasDe50(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
+    private BigDecimal usaNotasDe50(BigDecimal pValor) {
 	while (pValor.compareTo(new BigDecimal(50)) != -1) {
 	    if (usouNotaDe(50)) {
 		pValor = decrementaValorEm(50, pValor);
@@ -127,7 +145,7 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
 		    pValor = incrementaValorEm(50, pValor);
 		    break;
 		}
-//		pRetorno.adicionaNotaDe50();
+		qtdNotasRetorno.put(50, qtdNotasRetorno.get(50) + 1);
 	    } else {
 		break;
 	    }
@@ -136,8 +154,8 @@ public class CaixaEletronicoServiceImpl implements ICaixaEletronicoService {
     }
 
     private boolean usouNotaDe(final int pNota) {
-	if (qtdNotas.get(pNota) > 0) {
-	    qtdNotas.put(pNota, qtdNotas.get(pNota) - 1);
+	if (qtdNotasInicial.get(pNota) > 0) {
+	    qtdNotasInicial.put(pNota, qtdNotasInicial.get(pNota) - 1);
 	    return true;
 	}
 	return false;
