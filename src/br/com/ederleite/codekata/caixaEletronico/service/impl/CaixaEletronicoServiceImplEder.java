@@ -39,22 +39,17 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
     }
 
     @Override public QuantidadeNotaTO sacar(final BigDecimal pValor) throws ImpossivelSacarException {
-	final QuantidadeNotaTO retorno = new QuantidadeNotaTO(0, 0, 0, 0, 0);
-
 	validarValorInformado(pValor);
 	BigDecimal valor = pValor.setScale(0, RoundingMode.DOWN);
 
-	//se valor for impar, já infiro que a quantidade de notas de 5 é 1, se não, dá erro.
+	final QuantidadeNotaTO retorno = new QuantidadeNotaTO(0, 0, 0, 0, 0);
+	//se valor for impar, já infiro que a quantidade de notas de 5 é pelo menos 1.
 	valor = calcularValorImpar(valor, retorno);
-	//trata entrega de notas de R$ 50, tem uma pegadinha aqui!
+	//calcula quantidade necessária de cada nota
 	valor = calcularQuantidadeNotas50(valor, retorno);
-	//trata entrega de notas de R$ 20
 	valor = calcularQuantidadeNotas20(valor, retorno);
-	//trata entrega de notas de R$ 10
 	valor = calcularQuantidadeNotas10(valor, retorno);
-	//trata entrega de notas de R$ 5, tem uma pegadinha aqui também
 	valor = calcularQuantidadeNotas5(valor, retorno);
-	//trata entrega de notas de R$ 2
 	valor = calcularQuantidadeNotas2(valor, retorno);
 
 	//Dá erro caso valo não esteja zerado.
@@ -76,7 +71,7 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	if (Integer.valueOf(valorInteiroEDecimal[1]) != 0) {
 	    throw new ImpossivelSacarException("Impossivel sacar, apenas valores inteiros");
 	}
-	if (Arrays.asList(0,1, 3).contains(Integer.valueOf(valorInteiroEDecimal[0]))) {
+	if (Arrays.asList(0, 1, 3).contains(Integer.valueOf(valorInteiroEDecimal[0]))) {
 	    throw new ImpossivelSacarException("Impossivel sacar, caixa não possui notas de R$ 1.");
 	}
     }
@@ -133,11 +128,11 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	Integer quantNotas50 = calcularQuantidadeNotas(pValor, CINQUENTA);
 	BigDecimal valor = calcularSobra(pValor, quantNotas50, CINQUENTA);
 	if (!valorEhMultiploDe(valor, VINTE)) {
-	    final boolean naoTemNota10 = obterQuantidadeNotaEstoque(DEZ) == 0;
+	    final boolean naoTemNota10 = estoque.getNotas10() == 0;
 	    final boolean naoTem2Notas5 = estoque.getNotas5() < 2;
-	    final boolean tenhoNotas20Disponiveis =
-			    obterQuantidadeNotaEstoque(VINTE) >= calcularQuantidadeNotas(valor.add(CINQUENTA), VINTE);
-	    if (quantNotas50 % 2 == 1 && naoTemNota10 && naoTem2Notas5 && tenhoNotas20Disponiveis) {
+	    final boolean temNotas20Disponiveis = estoque.getNotas20() >= calcularQuantidadeNotas(valor.add(CINQUENTA), VINTE);
+	    final boolean ehImparQuantNotas50 = quantNotas50 % 2 == 1;
+	    if (ehImparQuantNotas50 && naoTemNota10 && naoTem2Notas5 && temNotas20Disponiveis) {
 		quantNotas50 -= 1;
 	    }
 	    valor = calcularSobra(pValor, quantNotas50, CINQUENTA);
@@ -152,8 +147,8 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
     }
 
     private BigDecimal calcularValorImpar(BigDecimal pValor, final QuantidadeNotaTO pRetorno) {
-	boolean ehImpar = !valorEhMultiploDe(pValor, new BigDecimal(2));
 	Integer quantCinco = 0;
+	boolean ehImpar = !valorEhMultiploDe(pValor, new BigDecimal(2));
 	if (ehImpar && estoque.getNotas5() > 0) {
 	    quantCinco = 1;
 	    pValor = pValor.subtract(CINCO);

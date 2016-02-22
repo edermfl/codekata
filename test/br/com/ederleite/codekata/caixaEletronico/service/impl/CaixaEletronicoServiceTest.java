@@ -20,7 +20,7 @@ public class CaixaEletronicoServiceTest {
 
     @Test
     public void testEncontrarTestTable() throws IOException {
-	final ICaixaEletronicoService service = new CaixaEletronicoServiceImplEder();
+	final ICaixaEletronicoService service = new CaixaEletronicoServiceImplRafael();
 	// leio o arquivo texto, e transformo-o em uma lista de strings
 	final List<String> linhasTestTable = ConstantsCodekata.obterCenariosTestTable(this.getClass());
 	// os erro serão adicionados nessa lista
@@ -45,6 +45,7 @@ public class CaixaEletronicoServiceTest {
 
 		if (erroEsperado) {
 		    erros.add("Cenario " + cenario + " falhou: pois um erro era esperado (Dados no cenario: " + linhaTxt + ")");
+		    System.out.println("Cenário " + cenario + ": falhou!");
 		    continue;
 		}
 
@@ -52,23 +53,27 @@ public class CaixaEletronicoServiceTest {
 		    erros.add("Cenario " + cenario + " falhou: quantidade de notas esperado (" + quantNotasEsperadas
 				    + "), não corresponde a quantidade retornada (" + notas.getQuantidadeNotas()
 				    + "). As notas dispensadas foram: "+notas.toString()+". (Dados no cenario: " + linhaTxt + ")");
+		    System.out.println("Cenário " + cenario + ": falhou!");
 		    continue;
 		}
 
 		if (valorInformado.compareTo(notas.getValorTotal()) != 0) {
 		    erros.add("Cenario " + cenario + " falhou: Valor dispensado pelo caixa eletrônico (" + notas.getValorTotal()
 				    + ") não corresponde ao valor solicitado pelo usuario (" + valorInformado + ").");
+		    System.out.println("Cenário " + cenario + ": falhou!");
 		    continue;
 		}
 		if (!resultadoEsperado.equals(notas.toString())) {
 		    erros.add("Cenario " + cenario + " falhou: Esperado (" + resultadoEsperado + "), mas retornado (" + notas
 				    .toString() + ")");
+		    System.out.println("Cenário " + cenario + ": falhou!");
 		    continue;
 		}
 	    } catch (Throwable e) {
 		if (!erroEsperado) {
 		    erros.add("Cenario " + cenario + " falhou: pois NAO era esperado erro neste cenario (Dados no cenario: "
 				    + linhaTxt + "). Erro lancado: " + e.getMessage());
+		    System.out.println("Cenário " + cenario + ": falhou!");
 		    continue;
 		}
 	    }
