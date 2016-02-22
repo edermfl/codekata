@@ -20,7 +20,7 @@ public class CaixaEletronicoServiceTest {
 
     @Test
     public void testEncontrarTestTable() throws IOException {
-	final ICaixaEletronicoService service = new CaixaEletronicoServiceImplFernando();
+	final ICaixaEletronicoService service = new CaixaEletronicoServiceImplEder();
 	// leio o arquivo texto, e transformo-o em uma lista de strings
 	final List<String> linhasTestTable = ConstantsCodekata.obterCenariosTestTable(this.getClass());
 	// os erro serão adicionados nessa lista
@@ -63,14 +63,16 @@ public class CaixaEletronicoServiceTest {
 		if (!resultadoEsperado.equals(notas.toString())) {
 		    erros.add("Cenario " + cenario + " falhou: Esperado (" + resultadoEsperado + "), mas retornado (" + notas
 				    .toString() + ")");
+		    continue;
 		}
-		    System.out.println("Cenário " + cenario + ": ok!");
 	    } catch (Throwable e) {
 		if (!erroEsperado) {
 		    erros.add("Cenario " + cenario + " falhou: pois NAO era esperado erro neste cenario (Dados no cenario: "
 				    + linhaTxt + "). Erro lancado: " + e.getMessage());
+		    continue;
 		}
 	    }
+	    System.out.println("Cenário " + cenario + ": ok!");
 	}
 
 	// se lista de erros contiver algum item, então falho o teste e exibo os erros.

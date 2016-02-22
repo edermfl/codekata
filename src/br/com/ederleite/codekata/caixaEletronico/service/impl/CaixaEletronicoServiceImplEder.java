@@ -76,7 +76,7 @@ public class CaixaEletronicoServiceImplEder implements ICaixaEletronicoService {
 	if (Integer.valueOf(valorInteiroEDecimal[1]) != 0) {
 	    throw new ImpossivelSacarException("Impossivel sacar, apenas valores inteiros");
 	}
-	if (Arrays.asList("1", "3").contains(Integer.valueOf(valorInteiroEDecimal[0]))) {
+	if (Arrays.asList(0,1, 3).contains(Integer.valueOf(valorInteiroEDecimal[0]))) {
 	    throw new ImpossivelSacarException("Impossivel sacar, caixa não possui notas de R$ 1.");
 	}
     }
