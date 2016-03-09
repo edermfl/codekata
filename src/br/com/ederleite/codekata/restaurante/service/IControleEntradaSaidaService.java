@@ -15,5 +15,5 @@ public interface IControleEntradaSaidaService {
      * @param pListaSaidas
      * @return número máximo de pessoas simultaneamente no restaurante
      */
-    public Integer calcularMaximoPessoasSimultaneamenteNoRestaurante(List<Integer> pListaEntradas, List<Integer> pListaSaidas);
+    public Integer calcularMaximoPessoasSimultaneamenteNoRestaurante(List<Integer> pListaEntradas, List<Integer> pListaSaidas) throws IllegalArgumentException;
 }
