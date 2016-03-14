@@ -37,13 +37,13 @@ public class ControleEntradaSaidaServiceImpl implements IControleEntradaSaidaSer
 
     private void validarEntradaSaida(int entradaAnterior, int entrada, int saida) {
         if (entrada == saida) {
-            throw new IllegalArgumentException("Não é possível entrar e sair ao mesmo tempo.");
+            throw new IllegalArgumentException("Não é possível entrar ($entrada) e sair ($saida) ao mesmo tempo.");
         }
         if (saida > 15000) {
-            throw new IllegalArgumentException("O restaurante já está fechado.");
+            throw new IllegalArgumentException("O restaurante já está fechado, saída: $saida.");
         }
         if (entradaAnterior >= entrada) {
-            throw new IllegalArgumentException("A Pessoa que entrou antes deste, não pode ter entrado no mesmo horário ou depois.");
+            throw new IllegalArgumentException("A Pessoa que entrou antes ($entradaAnterior), não pode ter entrado no mesmo horário ou depois do atual ($entrada).");
         }
     }
 }
