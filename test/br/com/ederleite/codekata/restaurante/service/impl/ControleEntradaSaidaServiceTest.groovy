@@ -11,7 +11,7 @@ import org.junit.Test
  */
 public class ControleEntradaSaidaServiceTest {
 
-    private final IControleEntradaSaidaService service = new ControleEntradaSaidaServiceImplDarian() ;
+    private final IControleEntradaSaidaService service = new ControleEntradaSaidaServiceImplEder() ;
 
     @Test
     public void testEncontrarTestTable() throws IOException {
@@ -63,7 +63,7 @@ public class ControleEntradaSaidaServiceTest {
 
     @Test
     public void testeCalcularMaximoPessoasSimultaneamenteNoRestaurante1() {
-        IControleEntradaSaidaService service = new ControleEntradaSaidaServiceImplInGroovy();
+        IControleEntradaSaidaService service = new ControleEntradaSaidaServiceImplEder();
         final List<Integer> listaEntradas = Arrays.asList(14, 67, 98);
         final List<Integer> listaSaidas = Arrays.asList(1890, 1900, 2123);
         final Integer quantidade = service.calcularMaximoPessoasSimultaneamenteNoRestaurante(listaEntradas, listaSaidas);
@@ -72,7 +72,7 @@ public class ControleEntradaSaidaServiceTest {
 
     @Test
     public void testeCalcularMaximoPessoasSimultaneamenteNoRestaurante2() {
-        IControleEntradaSaidaService service = new ControleEntradaSaidaServiceImplInGroovy();
+        IControleEntradaSaidaService service = new ControleEntradaSaidaServiceImplEder();
         final List<Integer> listaEntradas = Arrays.asList(200, 1800);
         final List<Integer> listaSaidas = Arrays.asList(1543, 2324);
         final Integer quantidade = service.calcularMaximoPessoasSimultaneamenteNoRestaurante(listaEntradas, listaSaidas);
