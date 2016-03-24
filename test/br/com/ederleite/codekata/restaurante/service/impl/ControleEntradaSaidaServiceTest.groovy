@@ -11,7 +11,7 @@ import org.junit.Test
  */
 public class ControleEntradaSaidaServiceTest {
 
-    private final IControleEntradaSaidaService service = new ControleEntradaSaidaServiceImplDebby() ;
+    private final IControleEntradaSaidaService service = new ControleEntradaSaidaServiceImplEder() ;
 
     @Test
     public void testEncontrarTestTable() throws IOException {
