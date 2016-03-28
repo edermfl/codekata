@@ -4,43 +4,43 @@ package br.com.ederleite.codekata.domino.domain.model;
  * Created by eml on 24/03/16.
  */
 public class PecaDomino {
-    private Integer ladoA;
+    private Integer pontaA;
 
-    private Integer ladoB;
+    private Integer pontaB;
 
     public PecaDomino() {
 
     }
 
-    public PecaDomino(final Integer pLadoA, final Integer pLadoB) {
+    public PecaDomino(final Integer pPontaA, final Integer pPontaB) {
 
-	ladoA = pLadoA;
-	ladoB = pLadoB;
+	pontaA = pPontaA;
+	pontaB = pPontaB;
     }
 
-    public Integer getLadoA() {
-	return ladoA;
+    public Integer getPontaA() {
+	return pontaA;
     }
 
-    public Integer getLadoB() {
-	return ladoB;
+    public Integer getPontaB() {
+	return pontaB;
     }
 
     public void inverterLado() {
-	final Integer auxLado = this.ladoA;
-	ladoA = ladoB;
-	ladoA = auxLado;
+	final Integer auxLado = this.pontaA;
+	pontaA = pontaB;
+	pontaA = auxLado;
     }
 
-    public void setLadoA(final Integer pLadoA) {
-	ladoA = pLadoA;
+    public void setPontaA(final Integer pPontaA) {
+	pontaA = pPontaA;
     }
 
-    public void setLadoB(final Integer pLadoB) {
-	ladoB = pLadoB;
+    public void setPontaB(final Integer pPontaB) {
+	pontaB = pPontaB;
     }
 
     @Override public String toString() {
-	return "[" + ladoA + "|" + ladoB + "]";
+	return "[" + pontaA + "|" + pontaB + "]";
     }
 }
