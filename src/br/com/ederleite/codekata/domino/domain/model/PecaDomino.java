@@ -29,7 +29,7 @@ public class PecaDomino {
     public void inverterLado() {
 	final Integer auxLado = this.pontaA;
 	pontaA = pontaB;
-	pontaA = auxLado;
+	pontaB = auxLado;
     }
 
     public void setPontaA(final Integer pPontaA) {
