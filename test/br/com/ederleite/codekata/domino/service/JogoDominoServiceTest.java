@@ -28,8 +28,8 @@ public class JogoDominoServiceTest {
 	final Tabuleiro resultado = service.jogar(listaPecas);
 	System.out.println(resultado);
 
-	Assert.assertEquals(Arrays.asList(new PecaDomino(0, 1), new PecaDomino(1, 2), new PecaDomino(2, 0).toString()),
-			resultado.getPecasEncaixadas().toString());
+	Assert.assertEquals(Arrays.asList(new PecaDomino(0, 1), new PecaDomino(1, 2), new PecaDomino(2, 0)).toString(),
+                resultado.getPecasEncaixadas().toString());
 
 	Assert.assertTrue(resultado.getPecasSobraram().isEmpty());
 
@@ -50,7 +50,7 @@ public class JogoDominoServiceTest {
 	Assert.assertEquals(Arrays.asList(new PecaDomino(1, 1), new PecaDomino(1, 0)).toString(),
 			resultado.getPecasEncaixadas().toString());
 
-	Assert.assertEquals(Arrays.asList(new PecaDomino(2, 0)).toString(), resultado.getPecasSobraram().toString());
+	Assert.assertEquals(Arrays.asList(new PecaDomino(2, 2)).toString(), resultado.getPecasSobraram().toString());
     }
 
     @Test(expected = IllegalArgumentException.class)
