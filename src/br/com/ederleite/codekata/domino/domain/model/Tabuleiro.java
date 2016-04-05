@@ -38,7 +38,9 @@ public class Tabuleiro {
     }
 
     @Override public String toString() {
-	return "Peças encaixadas: " + StringUtils.join(pecasEncaixadas, "") +
-			"\nSobra de peças=" + StringUtils.join(pecasSobraram, "");
+	return "  " + pecasEncaixadas.size() + " Peças encaixadas: " + StringUtils.join(pecasEncaixadas, "") +
+			"\n  " + pecasSobraram.size() + " Peças sobraram=" + (pecasSobraram.isEmpty() ?
+			" Sem sobras" :
+			StringUtils.join(pecasSobraram, ""));
     }
 }
