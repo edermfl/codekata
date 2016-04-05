@@ -23,12 +23,16 @@ public class JogoDominoServiceImpl2 implements IJogoDominoService {
 //            return 0
 //        }
 
-        pPecas.each{  peca ->
-
-
+        List<PecaDomino> pecasCarretoes = [];
+        for (Iterator<PecaDomino> iterator = pPecas.iterator(); iterator.hasNext();) {
+            PecaDomino peca =  iterator.next();
+            if(peca.pontaA == peca.pontaB) {
+                pecasCarretoes << peca
+                iterator.remove()
+            }
         }
 
-        LinkedList<PecaDomino> pecasSequencia = [] as LinkedList;
+        List<PecaDomino> pecasSequencia = [];
 
         // adiciona a primeira peça
         def primeiraPeca = validarPeca(pPecas.remove(0))
@@ -37,9 +41,11 @@ public class JogoDominoServiceImpl2 implements IJogoDominoService {
         //os extremos da sequencia são inicialmente a pontaA e B da primeira peça
         PecaDomino pecaExtremos = new PecaDomino(primeiraPeca.pontaA, primeiraPeca.pontaB)
 
-        while (encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia)) {
+        while (encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia, pecasCarretoes)) {
+            println(pecasSequencia)
             //continua até não encontrar mais peças que se encaixe.
         }
+        pPecas.addAll(pecasCarretoes)
         def tabuleiro = new Tabuleiro()
         tabuleiro.setPecasEncaixadas(pecasSequencia)
         tabuleiro.setPecasSobraram(pPecas)
@@ -52,25 +58,27 @@ public class JogoDominoServiceImpl2 implements IJogoDominoService {
         return peca
     }
 
-    private boolean encaixarProximaPeca(List<PecaDomino> pPecas, PecaDomino pecaExtremos, LinkedList<PecaDomino> pecasSequencia) {
-        def iterator = pPecas.iterator()
-        while (iterator.hasNext()) {
-            PecaDomino peca = validarPeca(iterator.next())
-            if (pecaExtremos.pontaB == peca.pontaB) peca.inverterLado()
-            if (pecaExtremos.pontaB == peca.pontaA) {
-                pecasSequencia.addLast(peca)
-                pecaExtremos.pontaB = peca.pontaB
-                iterator.remove()
-                return true
+    private boolean encaixarProximaPeca(List<PecaDomino> pPecas, PecaDomino pecaExtremos, List<PecaDomino> pecasSequencia, List<PecaDomino> pecasCarretoes) {
+        def iterators = [pecasCarretoes.iterator(), pPecas.iterator()]
+        for (int i = 0; i < 2; i++) {
+            Iterator<PecaDomino> iterator = iterators[i]
+            while (iterator.hasNext()) {
+                PecaDomino peca = validarPeca(iterator.next())
+                if (pecaExtremos.pontaB == peca.pontaB) peca.inverterLado()
+                if (pecaExtremos.pontaB == peca.pontaA) {
+                    pecasSequencia.add(peca)
+                    pecaExtremos.pontaB = peca.pontaB
+                    iterator.remove()
+                    return true
+                }
+                if (pecaExtremos.pontaA == peca.pontaA) peca.inverterLado()
+                if (pecaExtremos.pontaA == peca.pontaB) {
+                    pecasSequencia.add(0, peca)
+                    pecaExtremos.pontaA = peca.pontaA
+                    iterator.remove()
+                    return true
+                }
             }
-            if (pecaExtremos.pontaA == peca.pontaA) peca.inverterLado()
-            if (pecaExtremos.pontaA == peca.pontaB) {
-                pecasSequencia.addFirst(peca)
-                pecaExtremos.pontaA = peca.pontaA
-                iterator.remove()
-                return true
-            }
-
         }
         return false
     }

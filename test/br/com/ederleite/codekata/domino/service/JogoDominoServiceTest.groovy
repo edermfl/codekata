@@ -85,7 +85,7 @@ public class JogoDominoServiceTest {
             final boolean erroEsperado = 'erro' == resultadoEsperado || 'ERRO' == resultadoEsperado;
             Tabuleiro tabuleiro
 
-            def mensagemFalha = "Cenário $cenario: falhou! \nEntrada: ${pecasDomino?StringUtils.join(pecasDomino,""):"entrada nula"} \nSaida:\n"
+            def mensagemFalha = "Cenário $cenario: falhou! \nEntrada: ${pecasDomino ? StringUtils.join(pecasDomino, "") : "entrada nula"} \nSaida:\n"
             try {
                 tabuleiro = service.jogar(pecasDomino);
 
