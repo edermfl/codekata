@@ -15,23 +15,6 @@ public class JogoDominoServiceImpl2 implements IJogoDominoService {
         if (CollectionUtils.isEmpty(pPecas)) throw new IllegalArgumentException("Não posso jogar se a lista está nula ou vazia.")
         if (pPecas.size() > 100) throw new IllegalArgumentException("Máximo permitido são 100 peças a lista possui ${pPecas.size()} peças.")
 
-        //ordena lista... carretões na frente, pois devem ser os primeiros a serem encaixados.
-//        pPecas.sort { a, b ->
-//            if (a.pontaA == a.pontaB) return -1
-//            if (b.pontaA == b.pontaB) return 1
-//            return a.pontaA <=> b.pontaA + b.pontaB <=> b.pontaB
-//            return 0
-//        }
-
-        List<PecaDomino> pecasCarretoes = [];
-        for (Iterator<PecaDomino> iterator = pPecas.iterator(); iterator.hasNext();) {
-            PecaDomino peca =  iterator.next();
-            if(peca.pontaA == peca.pontaB) {
-                pecasCarretoes << peca
-                iterator.remove()
-            }
-        }
-
         List<PecaDomino> pecasSequencia = [];
 
         // adiciona a primeira peça
@@ -41,15 +24,61 @@ public class JogoDominoServiceImpl2 implements IJogoDominoService {
         //os extremos da sequencia são inicialmente a pontaA e B da primeira peça
         PecaDomino pecaExtremos = new PecaDomino(primeiraPeca.pontaA, primeiraPeca.pontaB)
 
-        while (encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia, pecasCarretoes)) {
+        // 1) tenta colocar em sequencias as peças na ordem que ela vem.
+        // Nesta abordagem algumas peças que podem ser encaixadas, ficaram sobrando, principalmente carretões.
+        while (encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia)) {
             println(pecasSequencia)
             //continua até não encontrar mais peças que se encaixe.
         }
-        pPecas.addAll(pecasCarretoes)
+
+        // 2) as peças que sobraram, preciso ter certeza que não se encaixam, assim, tento encaixa-las uma a uma
+        encaixarPecasSobraram(pPecas, pecasSequencia)
+
         def tabuleiro = new Tabuleiro()
         tabuleiro.setPecasEncaixadas(pecasSequencia)
         tabuleiro.setPecasSobraram(pPecas)
+
+        // 3) se sobrou mais peças que o as encaixadas, pode ser que comecei com a peça errada. Talvez deva tentar de outra forma.
+        if (pPecas.size() > pecasSequencia.size() && !temMuitosCarretoesSobrando(pPecas)) {
+            List<PecaDomino> pecasNovaTentativa = pPecas + pecasSequencia
+
+            def tabuleiroNovaTentativa = jogar(pecasNovaTentativa)
+            return tabuleiro.getPecasEncaixadas().size() > tabuleiroNovaTentativa.getPecasEncaixadas().size() ? tabuleiro : tabuleiroNovaTentativa
+
+        }
+
         return tabuleiro;
+    }
+
+    boolean temMuitosCarretoesSobrando(final List<PecaDomino> pPecaSobraram) {
+        def quantCarretoes = 0;
+        for (PecaDomino sobra : pPecaSobraram) {
+            quantCarretoes += sobra.pontaA == sobra.pontaB ? 1 : 0
+        }
+        def quantPecasNormais = pPecaSobraram.size() - quantCarretoes
+        return quantPecasNormais < quantCarretoes
+    }
+
+    private void encaixarPecasSobraram(List<PecaDomino> pPecas, ArrayList<PecaDomino> pecasSequencia) {
+        if (!pPecas.isEmpty()) {
+            Iterator<PecaDomino> iterator = pPecas.iterator()
+            while (iterator.hasNext()) {
+                def pecaAEncaixar = iterator.next()
+                for (int i = 0; i < pecasSequencia.size() - 1; i++) {
+                    def pecaAntes = pecasSequencia[i]
+                    def pecapecaDepois = pecasSequencia[i + 1]
+                    //Antes=[5|4]  Depois=[4|2]  À Encaixar [4|4] => OK
+                    //Antes=[5|4]  Depois=[4|2]  À Encaixar [6|4] => ERRO
+                    if (pecaAntes.pontaB == pecaAEncaixar.pontaB && pecaAEncaixar.pontaA == pecapecaDepois.pontaA) pecaAEncaixar.inverterLado()
+                    if (pecaAntes.pontaB == pecaAEncaixar.pontaA && pecaAEncaixar.pontaB == pecapecaDepois.pontaA) {
+                        pecasSequencia.add(i + 1, pecaAEncaixar)
+                        iterator.remove()
+                        println(pecasSequencia)
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     PecaDomino validarPeca(final PecaDomino peca) {
@@ -58,27 +87,36 @@ public class JogoDominoServiceImpl2 implements IJogoDominoService {
         return peca
     }
 
-    private boolean encaixarProximaPeca(List<PecaDomino> pPecas, PecaDomino pecaExtremos, List<PecaDomino> pecasSequencia, List<PecaDomino> pecasCarretoes) {
-        def iterators = [pecasCarretoes.iterator(), pPecas.iterator()]
-        for (int i = 0; i < 2; i++) {
-            Iterator<PecaDomino> iterator = iterators[i]
-            while (iterator.hasNext()) {
-                PecaDomino peca = validarPeca(iterator.next())
-                if (pecaExtremos.pontaB == peca.pontaB) peca.inverterLado()
-                if (pecaExtremos.pontaB == peca.pontaA) {
-                    pecasSequencia.add(peca)
-                    pecaExtremos.pontaB = peca.pontaB
-                    iterator.remove()
-                    return true
-                }
-                if (pecaExtremos.pontaA == peca.pontaA) peca.inverterLado()
-                if (pecaExtremos.pontaA == peca.pontaB) {
-                    pecasSequencia.add(0, peca)
-                    pecaExtremos.pontaA = peca.pontaA
-                    iterator.remove()
-                    return true
-                }
+    private boolean encaixarProximaPeca(List<PecaDomino> pPecas, PecaDomino pecaExtremos, List<PecaDomino> pecasSequencia) {
+        def i = 0
+        Iterator<PecaDomino> iterator = pPecas.iterator()
+        while (iterator.hasNext()) {
+            PecaDomino peca = validarPeca(iterator.next())
+            if (pecaExtremos.pontaB == peca.pontaB) peca.inverterLado()
+            if (pecaExtremos.pontaB == peca.pontaA) {
+                pecasSequencia.add(peca)
+                pecaExtremos.pontaB = peca.pontaB
+                iterator.remove()
+                print "($i) "
+                return true
             }
+            if (pecaExtremos.pontaA == peca.pontaA) peca.inverterLado()
+            if (pecaExtremos.pontaA == peca.pontaB) {
+                pecasSequencia.add(0, peca)
+                pecaExtremos.pontaA = peca.pontaA
+                iterator.remove()
+                print "($i) "
+                return true
+            }
+            i++
+        }
+        if (!pPecas.isEmpty() && pecaExtremos.pontaA == pecaExtremos.pontaB && pecasSequencia.size() > 1) {
+            //quando o jogo fechar, movo a primeira peça para o fim da sequencia, e recomeça a procura.
+            def primeriaPeca = pecasSequencia.remove(0)
+            pecasSequencia.add(primeriaPeca)
+            pecaExtremos.pontaA = pecasSequencia.get(0).pontaA
+            pecaExtremos.pontaB = primeriaPeca.pontaB
+            return encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia)
         }
         return false
     }
