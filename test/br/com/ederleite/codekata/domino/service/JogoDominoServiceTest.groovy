@@ -1,7 +1,7 @@
 package br.com.ederleite.codekata.domino.service
 import br.com.ederleite.codekata.domino.domain.model.PecaDomino
 import br.com.ederleite.codekata.domino.domain.model.Tabuleiro
-import br.com.ederleite.codekata.domino.service.impl.JogoDominoServiceImpl2
+import br.com.ederleite.codekata.domino.service.impl.JogoDominoServiceImplEder
 import br.com.ederleite.codekata.util.ConstantsCodekata
 import org.apache.commons.lang3.StringUtils
 import org.junit.Assert
@@ -11,7 +11,7 @@ import org.junit.Test
  */
 public class JogoDominoServiceTest {
 
-    private final IJogoDominoService service = new JogoDominoServiceImpl2();
+    private final IJogoDominoService service = new JogoDominoServiceImplEder();
 
     @Test
     public void testJogoDominioTestTable() throws IOException {

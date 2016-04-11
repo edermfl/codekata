@@ -8,7 +8,7 @@ import org.apache.commons.collections.CollectionUtils
 /**
  * Created by eml on 24/03/16.
  */
-public class JogoDominoServiceImpl2 implements IJogoDominoService {
+public class JogoDominoServiceImplEder implements IJogoDominoService {
 
     @Override
     public Tabuleiro jogar(final List<PecaDomino> pPecas) throws IllegalArgumentException {
