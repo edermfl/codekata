@@ -12,6 +12,10 @@ public class JogoDominoServiceImplEder implements IJogoDominoService {
 
     @Override
     public Tabuleiro jogar(final List<PecaDomino> pPecas) throws IllegalArgumentException {
+        return jogarInternal(pPecas, 0)
+    }
+
+    private Tabuleiro jogarInternal(List<PecaDomino> pPecas, int pQuantPecaEncaixadaUltimoJogo) {
         if (CollectionUtils.isEmpty(pPecas)) throw new IllegalArgumentException("Não posso jogar se a lista está nula ou vazia.")
         if (pPecas.size() > 100) throw new IllegalArgumentException("Máximo permitido são 100 peças a lista possui ${pPecas.size()} peças.")
 
@@ -26,7 +30,7 @@ public class JogoDominoServiceImplEder implements IJogoDominoService {
 
         // 1) tenta colocar em sequencias as peças na ordem que ela vem.
         // Nesta abordagem algumas peças que podem ser encaixadas, ficaram sobrando, principalmente carretões.
-        while (encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia)) {
+        while (encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia, 0)) {
             println(pecasSequencia)
             //continua até não encontrar mais peças que se encaixe.
         }
@@ -39,10 +43,12 @@ public class JogoDominoServiceImplEder implements IJogoDominoService {
         tabuleiro.setPecasSobraram(pPecas)
 
         // 3) se sobrou mais peças que o as encaixadas, pode ser que comecei com a peça errada. Talvez deva tentar de outra forma.
-        if (pPecas.size() > pecasSequencia.size() && !temMuitosCarretoesSobrando(pPecas)) {
-            List<PecaDomino> pecasNovaTentativa = pPecas + pecasSequencia
+        def quantPecas = pecasSequencia.size()
+        def quantPecaEncaixadasUltimoJogoIgualEsteJogo = pQuantPecaEncaixadaUltimoJogo == 0 || pQuantPecaEncaixadaUltimoJogo < quantPecas
+        if (pPecas.size() > quantPecas && !temMuitosCarretoesSobrando(pPecas) && quantPecaEncaixadasUltimoJogoIgualEsteJogo) {
+            List<PecaDomino> pecasNovaTentativa = pPecas.reverse() + pecasSequencia
 
-            def tabuleiroNovaTentativa = jogar(pecasNovaTentativa)
+            def tabuleiroNovaTentativa = jogarInternal(pecasNovaTentativa, quantPecas)
             return tabuleiro.getPecasEncaixadas().size() > tabuleiroNovaTentativa.getPecasEncaixadas().size() ? tabuleiro : tabuleiroNovaTentativa
 
         }
@@ -87,7 +93,7 @@ public class JogoDominoServiceImplEder implements IJogoDominoService {
         return peca
     }
 
-    private boolean encaixarProximaPeca(List<PecaDomino> pPecas, PecaDomino pecaExtremos, List<PecaDomino> pecasSequencia) {
+    private boolean encaixarProximaPeca(List<PecaDomino> pPecas, PecaDomino pecaExtremos, List<PecaDomino> pecasSequencia, int tentativas) {
         def i = 0
         Iterator<PecaDomino> iterator = pPecas.iterator()
         while (iterator.hasNext()) {
@@ -110,15 +116,23 @@ public class JogoDominoServiceImplEder implements IJogoDominoService {
             }
             i++
         }
-        if (!pPecas.isEmpty() && pecaExtremos.pontaA == pecaExtremos.pontaB && pecasSequencia.size() > 1) {
+        if (!pPecas.isEmpty() && ehCarretao(pecaExtremos) && pecasSequencia.size() > 1 && tentativas <3) {
             //quando o jogo fechar, movo a primeira peça para o fim da sequencia, e recomeça a procura.
+            println "Fechou jogo, ${++tentativas}° tentativa de abrir o jogo."
             def primeriaPeca = pecasSequencia.remove(0)
             pecasSequencia.add(primeriaPeca)
             pecaExtremos.pontaA = pecasSequencia.get(0).pontaA
             pecaExtremos.pontaB = primeriaPeca.pontaB
-            return encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia)
+            if(ehCarretao(primeriaPeca) && ehCarretao(pecasSequencia.get(0))){
+                return false;
+            }
+            return encaixarProximaPeca(pPecas, pecaExtremos, pecasSequencia, tentativas)
         }
         return false
+    }
+
+    private boolean ehCarretao(PecaDomino peca) {
+        peca.pontaA == peca.pontaB
     }
 
 }

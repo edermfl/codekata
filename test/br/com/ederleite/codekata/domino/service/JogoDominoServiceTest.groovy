@@ -83,7 +83,7 @@ public class JogoDominoServiceTest {
 
         // se lista de erros contiver algum item, então falho o teste e exibo os erros.
         if (!erros.isEmpty()) {
-            Assert.fail("Os Seguintes cenarios de teste falharam: \n" + StringUtils.join(erros, "\n"));
+            Assert.fail("Os Seguintes cenarios de teste falharam: \n${StringUtils.join(erros, "\n")}");
         }
     }
 
