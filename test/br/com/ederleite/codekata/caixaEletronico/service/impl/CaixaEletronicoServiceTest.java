@@ -3,7 +3,7 @@ package br.com.ederleite.codekata.caixaEletronico.service.impl;
 import br.com.ederleite.codekata.caixaEletronico.domain.ImpossivelSacarException;
 import br.com.ederleite.codekata.caixaEletronico.domain.model.QuantidadeNotaTO;
 import br.com.ederleite.codekata.caixaEletronico.service.ICaixaEletronicoService;
-import br.com.ederleite.codekata.util.ConstantsCodekata;
+import br.com.ederleite.codekata.util.CodekataUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class CaixaEletronicoServiceTest {
     public void testEncontrarTestTable() throws IOException {
 	final ICaixaEletronicoService service = new CaixaEletronicoServiceImplRafael();
 	// leio o arquivo texto, e transformo-o em uma lista de strings
-	final List<String> linhasTestTable = ConstantsCodekata.obterCenariosTestTable(this.getClass());
+	final List<String> linhasTestTable = CodekataUtil.obterCenariosTestTable(this.getClass());
 	// os erro serão adicionados nessa lista
 	final List<String> erros = new ArrayList<String>();
 	for (String linhaTxt : linhasTestTable) {

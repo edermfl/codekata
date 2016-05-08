@@ -2,7 +2,7 @@ package br.com.ederleite.codekata.encontreSequencia.service;
 
 import br.com.ederleite.codekata.encontreSequencia.domain.model.PosicaoTO;
 import br.com.ederleite.codekata.encontreSequencia.service.impl.EncontrarSequenciaEder;
-import br.com.ederleite.codekata.util.ConstantsCodekata;
+import br.com.ederleite.codekata.util.CodekataUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class EncontrarSequenciaTest {
     public void testEncontrarTestTable() throws IOException {
 	final IEncontrarSequencia service = new EncontrarSequenciaEder();
 	// leio o arquivo texto, e transformo-o em uma lista de strings
-	final List<String> linhasTestTable = ConstantsCodekata.obterCenariosTestTable(this.getClass())    ;
+	final List<String> linhasTestTable = CodekataUtil.obterCenariosTestTable(this.getClass())    ;
 	// os erro serão adicionados nessa lista
 	final List<String> erros = new ArrayList<String>();
 	for (String linhaTxt : linhasTestTable) {

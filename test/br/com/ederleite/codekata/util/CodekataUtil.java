@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by eml on 16/02/16.
  */
-public class ConstantsCodekata {
+public class CodekataUtil {
 
     /**
      * ISO8859 = "ISO-8859-1"
@@ -19,12 +19,17 @@ public class ConstantsCodekata {
     public static final String ISO88591 = "ISO-8859-1";
 
     public static List<String> obterCenariosTestTable(Class<?> pClasseTeste) throws IOException {
+	final List<String> cenarios = obterLinhasDoArquivo(pClasseTeste, "testTable.txt");
+	cenarios.remove(0); // linha 0 corresponde ao titulo das colunas
+	return cenarios;
+    }
+
+    public static List<String> obterLinhasDoArquivo(Class<?> pClasseTeste, String pNomeArquivo) throws IOException {
 	final File testTable = new File(
-			"test/" + pClasseTeste.getPackage().getName().replaceAll("\\.", "/") + "/testTable.txt");
+			"test/" + pClasseTeste.getPackage().getName().replaceAll("\\.", "/") + "/" + pNomeArquivo);
 	System.out.println(testTable.getAbsolutePath());
 	final FileInputStream inputStream = new FileInputStream(testTable);
-	final List<String> cenarios = IOUtils.readLines(inputStream, ConstantsCodekata.ISO88591);
-	cenarios.remove(0); // linha 0 corresponde ao titulo das colunas
+	final List<String> cenarios = IOUtils.readLines(inputStream, CodekataUtil.ISO88591);
 	final Iterator<String> iterator = cenarios.iterator();
 	while (iterator.hasNext()) {
 	    final String cenario = iterator.next();
