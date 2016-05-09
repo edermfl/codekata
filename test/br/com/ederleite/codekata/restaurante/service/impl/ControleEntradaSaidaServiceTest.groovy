@@ -1,7 +1,7 @@
 package br.com.ederleite.codekata.restaurante.service.impl
 
 import br.com.ederleite.codekata.restaurante.service.IControleEntradaSaidaService
-import br.com.ederleite.codekata.util.ConstantsCodekata
+import br.com.ederleite.codekata.util.CodekataUtil
 import org.apache.commons.lang3.StringUtils
 import org.junit.Assert
 import org.junit.Test
@@ -16,7 +16,7 @@ public class ControleEntradaSaidaServiceTest {
     @Test
     public void testEncontrarTestTable() throws IOException {
         // leio o arquivo texto, e transformo-o em uma lista de strings
-        final List<String> linhasTestTable = ConstantsCodekata.obterCenariosTestTable(this.getClass());
+        final List<String> linhasTestTable = CodekataUtil.obterCenariosTestTable(this.getClass());
         // os erro serão adicionados nessa lista
         final List<String> erros = new ArrayList<String>();
         for (String linhaTxt : linhasTestTable) {
