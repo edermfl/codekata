@@ -16,8 +16,8 @@ public interface INumeroErdosService {
      * - M. Souza, A. Selberg, A. Oliveira.
      * - J. Ninguem, M. Ninguem.
      * - P. Duarte, A. Oliveira.
-     * @param pNomeAutor
-     * @param pAutoresArtigos
+     * @param pNomeAutor nome de um autor qualquer. Ex: "A. Selberg".
+     * @param pAutoresArtigos cada item da lista corresponde a algo como isso: "P. Erdos, A. Selberg".
      * @return é esperado um número inteiro representando o Número de Erdos do autor.
      */
     public Integer descobrirNumeroErdosDoAutor(String pNomeAutor, List<String> pAutoresArtigos) throws IllegalArgumentException;
