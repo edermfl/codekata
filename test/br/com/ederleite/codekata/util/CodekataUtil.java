@@ -27,7 +27,6 @@ public class CodekataUtil {
     public static List<String> obterLinhasDoArquivo(Class<?> pClasseTeste, String pNomeArquivo) throws IOException {
 	final File testTable = new File(
 			"test/" + pClasseTeste.getPackage().getName().replaceAll("\\.", "/") + "/" + pNomeArquivo);
-	System.out.println(testTable.getAbsolutePath());
 	final FileInputStream inputStream = new FileInputStream(testTable);
 	final List<String> cenarios = IOUtils.readLines(inputStream, CodekataUtil.ISO88591);
 	final Iterator<String> iterator = cenarios.iterator();
