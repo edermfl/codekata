@@ -12,6 +12,7 @@ public class NumeroErdosServiceImplEder implements INumeroErdosService {
     @Override
     public Integer descobrirNumeroErdosDoAutor(
             final String pNomeAutor, final List<String> pAutoresArtigos) throws IllegalArgumentException {
+        if (pNomeAutor == ERDOS) return 0;
         Map<String, Integer> numeroPorAutor = [ERDOS: 0]
         for (String autores : pAutoresArtigos) {
             def listaAutores = autores.split(",")*.trim()

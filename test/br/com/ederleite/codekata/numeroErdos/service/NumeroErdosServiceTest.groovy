@@ -5,6 +5,7 @@ import br.com.ederleite.codekata.util.CodekataUtil
 import org.apache.commons.lang3.StringUtils
 import org.junit.Assert
 import org.junit.Test
+
 /**
  * Created by eder on 08/05/2016.
  */
@@ -25,28 +26,28 @@ public class NumeroErdosServiceTest {
             final String nomeAutor = linha[1]
             final nomeArquivo = "${linha[2]}.artigo"
             final List<String> listaAutoresPorArtigos = CodekataUtil.obterLinhasDoArquivo(this.class, nomeArquivo)
-            final Integer esperado = linha[3] as Integer
+            final Integer esperado = (linha[3] ? linha[3] : null) as Integer
             def resultadoEsperado = linha[4];
 
             final boolean erroEsperado = 'erro' == resultadoEsperado || 'ERRO' == resultadoEsperado;
             Integer numeroErdos
-            def mensagemFalha = "\n - NomeAutor: $nomeAutor \n - Artigos:\n       -> ${listaAutoresPorArtigos.join("\n       -> ")}  \n - Saida: $numeroErdos\n"
+            def mensagemFalha = "\n - NomeAutor: $nomeAutor \n - Artigos:\n       -> ${listaAutoresPorArtigos.join("\n       -> ")}  \n - Saida: %s\n"
             try {
                 numeroErdos = service.descobrirNumeroErdosDoAutor(nomeAutor, listaAutoresPorArtigos);
 
                 if (erroEsperado) {
-                    erros.add("Cenario " + cenario + " falhou: pois um erro era esperado " + mensagemFalha);
+                    erros.add("Cenario " + cenario + " falhou: pois um erro era esperado " + String.format(mensagemFalha, numeroErdos));
                     continue;
                 }
 
                 if (esperado != numeroErdos) {
-                    erros.add("Cenario $cenario falhou: Esperado $esperado, mas retornado $numeroErdos" + mensagemFalha);
+                    erros.add("Cenario $cenario falhou: Esperado $esperado, mas retornado $numeroErdos" + String.format(mensagemFalha, numeroErdos));
                     continue;
                 }
 
             } catch (Throwable e) {
                 if (!erroEsperado) {
-                    erros.add("Cenario $cenario falhou: pois NAO era esperado erro neste cenario: ${e.getMessage()}" + mensagemFalha);
+                    erros.add("Cenario $cenario falhou: pois NAO era esperado erro neste cenario: ${e.getMessage()}" + String.format(mensagemFalha, numeroErdos));
                     continue;
                 }
             }
@@ -55,7 +56,7 @@ public class NumeroErdosServiceTest {
 
         // se lista de erros contiver algum item, ent�o falho o teste e exibo os erros.
         if (!erros.isEmpty()) {
-            Assert.fail("Os Seguintes cenarios de teste falharam: \n${StringUtils.join(erros, "\n")}");
+            Assert.fail("Falharam ${erros.size()} de ${linhasTestTable.size()} cenários de teste: \n${StringUtils.join(erros, "\n")}");
         }
     }
 
