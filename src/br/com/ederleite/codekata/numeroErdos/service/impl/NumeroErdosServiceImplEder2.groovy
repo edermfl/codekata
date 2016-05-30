@@ -9,41 +9,70 @@ public class NumeroErdosServiceImplEder2 implements INumeroErdosService {
 
     public static final String ERDOS = 'P. Erdos'
 
+    def autoresJaConsultados = []
+    def Map<String, Set<String>> relacionamentoEntreAutores = [:]
+
     @Override
     public Integer descobrirNumeroErdosDoAutor(
             final String pNomeAutor, final List<String> pAutoresArtigos) throws IllegalArgumentException {
+
+        // se nome procurado for erdos, retorna 0 direto.
         if (pNomeAutor == ERDOS) return 0;
-        Map<String, Integer> numeroPorAutor = [ERDOS: 0]
 
-        List<String> listaAutoresDoArtigo = encontrarArtigoDoAutorProcuradoNalista(pNomeAutor, pAutoresArtigos)
-        if(!listaAutoresDoArtigo) return -1;
-        if(listaAutoresDoArtigo.contains(ERDOS)) return 1;
 
-//       descobreNumero(listaAutoresDoArtigo, pAutoresArtigos, 1)
-//
-//
-//        def numeroErdos = numeroPorAutor.get(pNomeAutor)
-//        return numeroErdos ? numeroErdos : -1;
-    }
+        for (String listaAutoresPorArtigo : pAutoresArtigos) {
+            // se na lista de autores tiver erdos e o autor procurado, então retorno 1
+            if (listaAutoresPorArtigo.contains(ERDOS) && listaAutoresPorArtigo.contains(pNomeAutor)) {
+                return 1;
+            }
 
-    List<String> encontrarArtigoDoAutorProcuradoNalista(final String pNomeAutor, final List<String> pListaArtigos) {
-        def artigo = pListaArtigos.find { it.contains(pNomeAutor) }
-        pListaArtigos.remove(artigo);
-        def listaAutoresDoArtigo  = []
-        if(artigo) {
-            listaAutoresDoArtigo = artigo.split(",")*.trim()
-            //removo o nome do autor encontrado, pois agora terei que procurar se os autores que escrever com ele, escreveram com ERDOS
-            listaAutoresDoArtigo.remove(pNomeAutor)
-        }
-        return listaAutoresDoArtigo
-    }
+            def listaAutores = listaAutoresPorArtigo.split(",")*.trim()
+            for (String autor : listaAutores) {
+                def novosAutores = new HashSet<String>(listaAutores)
+                novosAutores.remove(autor)  //removo o próprio autor da lista
 
-    Integer descobreNumero(final List<String> pListaAutoresEncontrados, final ArrayList<String> pAutoresArtigos, final int numeroErdos) {
+                def coautores = relacionamentoEntreAutores.get(autor)
+                if (!coautores) {
+                    coautores = novosAutores
+                } else {
+                    coautores.addAll(novosAutores)
+                }
 
-        for (String autor : pListaAutoresEncontrados) {
-            List<String> listaAutoresDoArtigo = encontrarArtigoDoAutorProcuradoNalista(autor, pAutoresArtigos)
-
+                relacionamentoEntreAutores.put(autor, coautores)
+            }
 
         }
+
+        Integer numero = descobrirNumero(pNomeAutor, 1, [])
+        relacionamentoEntreAutores.clear()
+        return numero
+
+    }
+
+    int descobrirNumero(
+            final String pNomeAutorProcurado, int numeroErdos, List<String> pAutoresJaConsultados) {
+        def listaCoautores = relacionamentoEntreAutores.get(pNomeAutorProcurado)
+        def numeroDoAutorProcurado = numeroErdos
+        listaCoautores?.removeAll(pAutoresJaConsultados)
+        if (!listaCoautores) {
+            return -1
+        }
+        if (listaCoautores.contains(ERDOS)) {
+            return numeroErdos;
+        }
+
+        def numeroAnterior = 101
+        for (String coautor : listaCoautores) {
+            pAutoresJaConsultados.add(pNomeAutorProcurado)
+            int retorno = descobrirNumero(coautor, numeroDoAutorProcurado +1, pAutoresJaConsultados)
+            if (retorno == 2) return retorno
+            if (retorno < numeroAnterior) {
+                numeroAnterior = retorno
+            }
+        }
+
+        return numeroAnterior;
+
+
     }
 }
