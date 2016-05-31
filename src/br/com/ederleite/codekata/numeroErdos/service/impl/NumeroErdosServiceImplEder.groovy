@@ -49,6 +49,7 @@ public class NumeroErdosServiceImplEder implements INumeroErdosService {
 
         Integer numero = descobrirNumero(pNomeAutor, 1, [])
         relacionamentoEntreAutores.clear()
+
         return numero
 
     }
