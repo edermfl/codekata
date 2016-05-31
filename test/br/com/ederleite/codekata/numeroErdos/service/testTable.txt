@@ -15,38 +15,37 @@
 |14|L. Siqueira|autores003|-1|ok|
 |15|F. Pimenta|autores004|11|ok|
 |16|D. Adorni|autores004|10|ok|
-#|17|F. Pimenta|autores005|1|ok|
-#|18|D. Adorni|autores005|2|ok|
-#|19|P. Duarte|autores005|5|ok|
-#|20|M. Ninguem|autores005|6|ok|
-#|21|J. Ninguem|autores005|5|ok|
-#|22|M. Marquezine|autores005|-1|ok|
-#|23|J. Esquina|autores005|-1|ok|
-#|24|P. Erdos|autores006|0|ok|
-#|25|A. Erdos|autores006|1|ok|
-#|26|B. Erdos|autores006|2|ok|
-#|27|C. Erdos|autores006|3|ok|
-#|28|D. Erdos|autores006|4|ok|
-#|29|E. Erdos|autores006|5|ok|
-#|30|F. Erdos|autores006|6|ok|
-#|31|F. Pimenta|autores007|-1|ok|
-#|32|D. Adorni|autores007|-1|ok|
-#|33|P. Duarte|autores007|-1|ok|
-#|34|M. Ninguem|autores007|-1|ok|
-#|35|J. Ninguem|autores007|-1|ok|
-#|36|M. Marquezine|autores007|-1|ok|
-#|37|J. Silva|autores007|-1|ok|
-#|38|M. Souza|autores007|-1|ok|
-#|39|A. Oliveira|autores007|-1|ok|
-#|40|A. Inkueiua|autores009|10|ok|
-#|41|L. Gtofveox|autores009|-1|ok|
-#|42|M. Hajeorgnmkuiy|autores009|9|ok|
-#|43|F. Bneneanqecrjaix|autores010|100|ok|
-#|44||autores013||erro|                            # nome autor pesquisado em branco (por paramentro)
-#|45|Z. Silva Pinto|autores013||erro|              # nome autor com dois sobrenome (por paramentro)
-#|46|Z. SilvaPintoSouzaSantos|autores013||erro|    # nome autor com mais de 15 caracteres (por paramentro)
-#|47|P. Erdos|autores013||erro|                    # nome autor com mais de 15 caracteres (na lista)
-#|48|P. Erdos|autores011||erro|                    # mais de 100 artigos na lista
-#|49|P. Erdos|autores012||erro|                    # nenhum artigo na lista
-#|50|E. Leite|autores008||erro|                    # mais de 10 autores em uma linha
-#
+|17|F. Pimenta|autores005|1|ok|
+|18|D. Adorni|autores005|2|ok|
+|19|P. Duarte|autores005|5|ok|
+|20|M. Ninguem|autores005|6|ok|
+|21|J. Ninguem|autores005|5|ok|
+|22|M. Marquezine|autores005|-1|ok|
+|23|J. Esquina|autores005|-1|ok|
+|24|P. Erdos|autores006|0|ok|
+|25|A. Erdos|autores006|1|ok|
+|26|B. Erdos|autores006|2|ok|
+|27|C. Erdos|autores006|3|ok|
+|28|D. Erdos|autores006|4|ok|
+|29|E. Erdos|autores006|5|ok|
+|30|F. Erdos|autores006|6|ok|
+|31|F. Pimenta|autores007|-1|ok|
+|32|D. Adorni|autores007|-1|ok|
+|33|P. Duarte|autores007|-1|ok|
+|34|M. Ninguem|autores007|-1|ok|
+|35|J. Ninguem|autores007|-1|ok|
+|36|M. Marquezine|autores007|-1|ok|
+|37|J. Silva|autores007|-1|ok|
+|38|M. Souza|autores007|-1|ok|
+|39|A. Oliveira|autores007|-1|ok|
+|40|A. Inkueiua|autores009|10|ok|
+|41|L. Gtofveox|autores009|-1|ok|
+|42|M. Hajeorgnmkuiy|autores009|9|ok|
+|43|F. Bneneanqecrjaix|autores010|100|ok|
+|44||autores013||erro|                            # nome autor pesquisado em branco (por paramentro)
+|45|Z. Silva Pinto|autores013||erro|              # nome autor com dois sobrenome (por paramentro)
+|46|Z. SilvaPintoSouzaSantos|autores013||erro|    # nome autor com mais de 15 caracteres (por paramentro)
+|47|Z. Souza|autores013||erro|                    # nome autor com mais de 15 caracteres (na lista)
+|48|I. Aitotudsuououia|autores011||erro|          # mais de 100 artigos na lista
+|49|E. Leite|autores012||erro|                    # nenhum artigo na lista
+|50|E. Leite|autores008||erro|                    # mais de 10 autores em uma linha
