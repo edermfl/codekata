@@ -4,7 +4,7 @@ import br.com.ederleite.codekata.numeroErdos.service.INumeroErdosService;
 
 import java.util.*;
 
-public class NumeroErdosPimentaServiceImpl implements INumeroErdosService {
+public class NumeroErdosServiceImplPimenta implements INumeroErdosService {
 
 	
 	final boolean IS_CASE_SENSITIVE = false;
@@ -15,7 +15,7 @@ public class NumeroErdosPimentaServiceImpl implements INumeroErdosService {
 	Map<String,List<String>> mapaAutores = new HashMap<String,List<String>>();
 	
 	
-	public NumeroErdosPimentaServiceImpl(){
+	public NumeroErdosServiceImplPimenta(){
 		mapaAutores =  new HashMap<String,List<String>>();
 		listaAmigoQueBusca = new ArrayList<String>();
 	}
@@ -173,7 +173,7 @@ public class NumeroErdosPimentaServiceImpl implements INumeroErdosService {
 	
 
 	public static void main(String[] args) {
-		NumeroErdosPimentaServiceImpl nErdos = new NumeroErdosPimentaServiceImpl();
+		NumeroErdosServiceImplPimenta nErdos = new NumeroErdosServiceImplPimenta();
 		List<String> lista = new ArrayList<String>();
 		lista.add("P. Erdos, J.1");
 		lista.add("J.1,J.2");

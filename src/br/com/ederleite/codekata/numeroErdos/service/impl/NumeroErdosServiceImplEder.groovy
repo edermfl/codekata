@@ -27,13 +27,13 @@ public class NumeroErdosServiceImplEder implements INumeroErdosService {
             for (String autor : listaAutores) {
                 validarNomeAutor(autor)
 
-                // se na lista de autores tiver erdos e o autor procurado, então retorno 1
+                // se na lista de autores tiver erdos e o autor procurado, entï¿½o retorno 1
                 if (listaAutores.contains(ERDOS) && listaAutores.contains(pNomeAutor)) {
                     return 1;
                 }
 
                 def novosAutores = new HashSet<String>(listaAutores)
-                novosAutores.remove(autor)  //removo o próprio autor da lista
+                novosAutores.remove(autor)  //removo o prï¿½prio autor da lista
 
                 def coautores = relacionamentoEntreAutores.get(autor)
                 if (!coautores) {
@@ -56,20 +56,20 @@ public class NumeroErdosServiceImplEder implements INumeroErdosService {
 
     private void validarListaAutores(final List<String> pListaAutoresPorArtigo) throws IllegalArgumentException {
         if (pListaAutoresPorArtigo.size() > 10) {
-            throw new IllegalArgumentException("Erro");
+            throw new IllegalArgumentException("Erro ao validar autores por artigo: ${pListaAutoresPorArtigo.join(", ")}");
 
         }
     }
 
     private void validarListaArtigos(final List<String> pArtigos) throws IllegalArgumentException {
         if (!pArtigos || pArtigos.size() > 100) {
-            throw new IllegalArgumentException("Erro");
+            throw new IllegalArgumentException("Erro ao validar lista de artigo: ${pArtigos.join("\n")}");
         }
     }
 
     private void validarNomeAutor(final String pNomeAutor) throws IllegalArgumentException {
         if (!pNomeAutor || pNomeAutor.length() > 15 || pNomeAutor.count(' ') > 1) {
-            throw new IllegalArgumentException("Erro");
+            throw new IllegalArgumentException("Erro o autor: $pNomeAutor");
         }
     }
 
@@ -86,13 +86,9 @@ public class NumeroErdosServiceImplEder implements INumeroErdosService {
 
         def numeroEncontrados = []
         for (String coautor : listaCoautores) {
-            pAutoresJaConsultados.add(pNomeAutorProcurado)
-
-            def numero = descobrirNumero(coautor, numeroErdos + 1, pAutoresJaConsultados)
-            numeroEncontrados << numero
-
+            pAutoresJaConsultados << pNomeAutorProcurado
+            numeroEncontrados << descobrirNumero(coautor, numeroErdos + 1, pAutoresJaConsultados)
         }
-
         if (numeroEncontrados.size() > 1) numeroEncontrados = numeroEncontrados.findAll { it != -1 }
         return numeroEncontrados ? numeroEncontrados?.min() : -1;
     }

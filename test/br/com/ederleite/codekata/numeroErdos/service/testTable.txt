@@ -38,10 +38,10 @@
 |37|J. Silva|autores007|-1|ok|
 |38|M. Souza|autores007|-1|ok|
 |39|A. Oliveira|autores007|-1|ok|
-|40|A. Inkueiua|autores009|10|ok|
+|40|T. Aow|autores009|6|ok|
 |41|L. Gtofveox|autores009|-1|ok|
-|42|M. Hajeorgnmkuiy|autores009|9|ok|
-|43|F. Bneneanqecrjaix|autores010|100|ok|
+|42|Y. Zrma|autores009|3|ok|
+|43|F. Bneneanqecrj|autores010|100|ok|
 |44||autores013||erro|                            # nome autor pesquisado em branco (por paramentro)
 |45|Z. Silva Pinto|autores013||erro|              # nome autor com dois sobrenome (por paramentro)
 |46|Z. SilvaPintoSouzaSantos|autores013||erro|    # nome autor com mais de 15 caracteres (por paramentro)
