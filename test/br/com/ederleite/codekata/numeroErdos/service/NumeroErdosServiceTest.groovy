@@ -1,15 +1,16 @@
 package br.com.ederleite.codekata.numeroErdos.service
 
-import br.com.ederleite.codekata.numeroErdos.service.impl.NumeroErdosServiceImplLucas
+import br.com.ederleite.codekata.numeroErdos.service.impl.NumeroErdosServiceImplEder
 import br.com.ederleite.codekata.util.CodekataUtil
 import org.apache.commons.lang3.StringUtils
 import org.junit.Assert
 import org.junit.Test
+
 /**
  * Created by eder on 08/05/2016.
  */
 public class NumeroErdosServiceTest {
-    private final INumeroErdosService service = new NumeroErdosServiceImplLucas();
+    private final INumeroErdosService service = new NumeroErdosServiceImplEder();
 
     @Test
     public void testNumeroErdosTestTable() throws IOException {

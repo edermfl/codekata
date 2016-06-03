@@ -38,7 +38,7 @@
 |37|J. Silva|autores007|-1|ok|
 |38|M. Souza|autores007|-1|ok|
 |39|A. Oliveira|autores007|-1|ok|
-|40|T. Aow|autores009|6|ok|
+|40|T. Aow|autores009|5|ok|
 |41|L. Gtofveox|autores009|-1|ok|
 |42|Y. Zrma|autores009|3|ok|
 |43|F. Bneneanqecrj|autores010|100|ok|
