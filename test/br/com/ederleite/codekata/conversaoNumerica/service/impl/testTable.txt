@@ -1,0 +1,13 @@
+|cenario|indoArabico|romano|ok|
+|1|1|I|ok|
+|2|5|V|ok|
+|3|10|X|ok|
+|4|50|L|ok|
+|5|100|C|ok|
+|6|500|D|ok|
+|7|1000|M|ok|
+|8|1000|M|ok|
+|9|51|LI|ok|
+|10|1001|MI|ok|
+|11|4000|(IV)|ok|
+|12|5050|(V)D|ok|
