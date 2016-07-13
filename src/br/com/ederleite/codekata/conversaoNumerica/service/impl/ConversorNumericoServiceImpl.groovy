@@ -32,12 +32,48 @@ public class ConversorNumericoServiceImpl implements IConversorNumericoService {
     @Override
     public String converterParaIndoArabico(final String pNumeroRomano) throws IllegalArgumentException {
         validarNumeralRomano(pNumeroRomano)
-        return null;
+        def numeraisSubtracao = [NumeralRomano.I, NumeralRomano.X, NumeralRomano.C]
+        int valorIndoArabico = 0
+
+        def tamanhoNumeral = pNumeroRomano.length()
+        for (int i = 0; i < tamanhoNumeral; i++) {
+
+            int multiplicador = 1
+            String caracter = pNumeroRomano[i]
+            if (caracter == '(') {
+                caracter = ''
+                while(1) {
+                    def proximo = pNumeroRomano[++i]
+                    if(proximo == ')') break;
+                    caracter += proximo
+                }
+                multiplicador = 1000
+            }
+
+            def numeral = NumeralRomano.valueOf(caracter)
+
+            if (numeraisSubtracao.contains(numeral) && i+1 < tamanhoNumeral) {
+                def proximoCaracter = pNumeroRomano[i + 1]
+                try {
+                    def numeralComposto = NumeralRomano.valueOf(caracter + proximoCaracter)
+                    numeral = numeralComposto
+                    i++
+                } catch (e) {
+                    // continue
+                }
+            }
+            valorIndoArabico += numeral.valor * multiplicador
+        }
+        obterValorInteiro(valorIndoArabico.toString())
+        return valorIndoArabico.toString();
     }
 
     void validarNumeralRomano(final String pNumeroRomano) {
-        if(!pNumeroRomano.matches("[MDCLXVI]+")){
-            throw new IllegalAccessException("Número '$pNumero' não é romano.")
+        if (!pNumeroRomano.matches("[\\(\\)MDCLXVI]+")) {
+            throw new IllegalAccessException("Número '$pNumeroRomano' não é romano.")
+        }
+        if (!pNumeroRomano.matches("(CM|M{0,3}|M.*|               D{0,3}|C{0,3}|L{0,3}|X{0,3}|V{0,3}|I{0,3})")) {
+            throw new IllegalAccessException("Número '$pNumeroRomano' não é romano.")
         }
     }
 

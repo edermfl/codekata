@@ -40,8 +40,10 @@ public class ConversorNumericoServiceTest {
             def mensagemFalha = "\n - Cenário: $linhaTxt \n - Saida: indo-arábico: %s; romano: %s.\n"
             try {
                 inicioCenario = System.currentTimeMillis()
-                indoArabicoGerado = service.converterParaIndoArabico(romanoEsperado);
-                romanoGerado = service.converterParaRomano(indoArabicoEsperado);
+                if (romanoEsperado)
+                    indoArabicoGerado = service.converterParaIndoArabico(romanoEsperado);
+                if (indoArabicoEsperado)
+                    romanoGerado = service.converterParaRomano(indoArabicoEsperado);
                 fimCenario = System.currentTimeMillis()
 
                 if (erroEsperado) {
@@ -49,10 +51,10 @@ public class ConversorNumericoServiceTest {
                     continue;
                 }
 
-//                if (indoArabicoEsperado != indoArabicoGerado) {
-//                    erros.add("Cenario $cenario falhou: Esperado indo-arábico $indoArabicoEsperado, mas retornado $indoArabicoGerado. Tempo execução: ${fimCenario - inicioCenario} milisegundos." + String.format(mensagemFalha, indoArabicoGerado, romanoGerado));
-//                    continue;
-//                }
+                if (indoArabicoEsperado != indoArabicoGerado) {
+                    erros.add("Cenario $cenario falhou: Esperado indo-arábico $indoArabicoEsperado, mas retornado $indoArabicoGerado. Tempo execução: ${fimCenario - inicioCenario} milisegundos." + String.format(mensagemFalha, indoArabicoGerado, romanoGerado));
+                    continue;
+                }
                 if (romanoEsperado != romanoGerado) {
                     erros.add("Cenario $cenario falhou: Esperado romano $romanoEsperado, mas retornado $romanoGerado. Tempo execução: ${fimCenario - inicioCenario} milisegundos." + String.format(mensagemFalha, indoArabicoGerado, romanoGerado));
                     continue;
