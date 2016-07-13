@@ -10,7 +10,7 @@ import org.junit.Test
  * Created by eml on 24/06/16.
  */
 public class ConversorNumericoServiceTest {
-    private final IConversorNumericoService service = new ConversorNumericoServiceImpl();
+    private final IConversorNumericoService service = new ConversorNumericoServiceMateusImpl();
 
     @Test
     public void testConversorNumericoTestTable() throws IOException {

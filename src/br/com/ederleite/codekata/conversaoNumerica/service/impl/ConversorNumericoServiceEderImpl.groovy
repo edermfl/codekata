@@ -5,7 +5,7 @@ import br.com.ederleite.codekata.conversaoNumerica.service.IConversorNumericoSer
 /**
  * Created by eml on 24/06/16.
  */
-public class ConversorNumericoServiceImpl implements IConversorNumericoService {
+public class ConversorNumericoServiceEderImpl implements IConversorNumericoService {
 
     enum NumeralRomano {
         M(1000),
@@ -72,7 +72,7 @@ public class ConversorNumericoServiceImpl implements IConversorNumericoService {
         if (!pNumeroRomano.matches("[\\(\\)MDCLXVI]+")) {
             throw new IllegalAccessException("Número '$pNumeroRomano' não é romano.")
         }
-        if (!pNumeroRomano.matches("(CM|M{0,3}|M.*|               D{0,3}|C{0,3}|L{0,3}|X{0,3}|V{0,3}|I{0,3})")) {
+        if (!pNumeroRomano.matches("(\\((X|IX)\\))?(\\((IV|V)\\))?(\\(I\\)){0,3}M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})")) {
             throw new IllegalAccessException("Número '$pNumeroRomano' não é romano.")
         }
     }
