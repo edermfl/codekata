@@ -10,7 +10,7 @@ import org.junit.Test
  * Created by eml on 24/06/16.
  */
 public class ConversorNumericoServiceTest {
-    private final IConversorNumericoService service = new ConversorNumericoServiceMateusImpl();
+    private final IConversorNumericoService service = new ConversorNumericoServiceMateusImpl()
 
     @Test
     public void testConversorNumericoTestTable() throws IOException {
@@ -18,7 +18,8 @@ public class ConversorNumericoServiceTest {
         def inicioTeste = System.currentTimeMillis()
 
         // leio o arquivo texto, e transformo-o em uma lista de strings
-        final List<String> linhasTestTable = CodekataUtil.obterCenariosTestTable(this.getClass());
+        final List<String> linhasTestTable = CodekataUtil.obterLinhasDoArquivo(this.getClass(), "testTableMateus.txt");
+        linhasTestTable.remove(0); // linha 0 corresponde ao titulo das colunas
         // os erro serão adicionados nessa lista
         final List<String> erros = new ArrayList<String>();
         for (String linhaTxt : linhasTestTable) {
